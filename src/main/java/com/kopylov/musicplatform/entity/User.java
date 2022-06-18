@@ -9,7 +9,9 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.CascadeType.ALL;
@@ -36,7 +38,7 @@ public class User {
 
     private String firstName;
     private String lastName;
-    private String userImage;
+    private String imageName;
 
     @ManyToMany(fetch = EAGER, cascade = ALL)
     private Set<Role> roles = new HashSet<>();

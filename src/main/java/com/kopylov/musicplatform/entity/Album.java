@@ -8,21 +8,18 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 
+import java.sql.Date;
 import java.sql.Time;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import static javax.persistence.CascadeType.ALL;
+import static com.kopylov.musicplatform.constants.DateFormat.RELEASE_MUSIC_FORMAT;
 import static javax.persistence.EnumType.STRING;
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -37,7 +34,7 @@ public class Album {
     private Long id;
 
     @NonNull
-    private String albumTitle;
+    private String title;
 
     @Enumerated(STRING)
     private AlbumType type;
@@ -45,10 +42,9 @@ public class Album {
     @Enumerated(STRING)
     private AlbumGenre genre;
 
-    private Time albumDuration;
-    private String albumImage;
-    private Date addedDate;
+    private Time duration;
+    private String imageName;
 
-    @ManyToMany(fetch = EAGER, cascade = ALL)
-    private Set<Artist> artists = new HashSet<>();
+    @DateTimeFormat(pattern = RELEASE_MUSIC_FORMAT)
+    private Date releaseDate;
 }

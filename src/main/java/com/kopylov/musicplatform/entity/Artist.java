@@ -10,11 +10,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -30,9 +26,5 @@ public class Artist {
 
     @NonNull
     private String name;
-    private String musicianImage;
-
-    @OneToOne(fetch = EAGER, cascade = ALL)
-    @JoinColumn(name = "album_id", nullable = false)
-    private Album album;
+    private String imageName;
 }

@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +16,7 @@ import javax.persistence.OneToOne;
 
 import java.util.Date;
 
+import static com.kopylov.musicplatform.constants.DateFormat.TOKEN_EXPIRATION_FORMAT;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
@@ -32,7 +34,9 @@ public class Token {
 
     @NonNull
     private String token;
+
     @NonNull
+    @DateTimeFormat(pattern = TOKEN_EXPIRATION_FORMAT)
     private Date expirationDate;
 
     @OneToOne(fetch = EAGER, cascade = ALL)

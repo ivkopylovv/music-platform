@@ -29,5 +29,5 @@ public class Role {
 
     @Enumerated(STRING)
     @NonNull
-    private RoleName roleName;
+    private RoleName name;
 }

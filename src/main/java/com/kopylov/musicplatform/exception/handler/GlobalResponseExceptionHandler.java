@@ -1,6 +1,6 @@
 package com.kopylov.musicplatform.exception.handler;
 
-import com.kopylov.musicplatform.exception.data.ResponseError;
+import com.kopylov.musicplatform.exception.data.ApiError;
 import com.kopylov.musicplatform.mapper.ResponseMapper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
@@ -40,9 +40,9 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
         builder.append(e.getContentType()).append(MEDIA_TYPE_NOT_SUPPORTED);
         e.getSupportedMediaTypes().forEach(t -> builder.append(t).append(", "));
         details.add(builder.toString());
-        ResponseError error = new ResponseError(LocalDateTime.now(), INVALID_JSON, details);
+        ApiError error = new ApiError(LocalDateTime.now(), BAD_REQUEST, INVALID_JSON, details);
 
-        return ResponseMapper.errorToEntity(error, BAD_REQUEST);
+        return ResponseMapper.errorToEntity(error);
     }
 
     @Override
@@ -50,9 +50,9 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
             HttpMessageNotReadableException e, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
         List<String> details = new ArrayList<>(Arrays.asList(e.getMessage()));
-        ResponseError error = new ResponseError(LocalDateTime.now(), MALFORMED_JSON_REQUEST, details);
+        ApiError error = new ApiError(LocalDateTime.now(), BAD_REQUEST, MALFORMED_JSON_REQUEST, details);
 
-        return ResponseMapper.errorToEntity(error, BAD_REQUEST);
+        return ResponseMapper.errorToEntity(error);
     }
 
     @Override
@@ -64,9 +64,9 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
                 .stream()
                 .map(error -> error.getObjectName() + " : " + error.getDefaultMessage())
                 .collect(Collectors.toList());
-        ResponseError error = new ResponseError(LocalDateTime.now(), MALFORMED_JSON_REQUEST, details);
+        ApiError error = new ApiError(LocalDateTime.now(), BAD_REQUEST, MALFORMED_JSON_REQUEST, details);
 
-        return ResponseMapper.errorToEntity(error, BAD_REQUEST);
+        return ResponseMapper.errorToEntity(error);
     }
 
     @Override
@@ -76,33 +76,33 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
         List<String> details = new ArrayList<>();
 
         details.add(e.getParameterName() + PARAMETER_IS_MISSING);
-        ResponseError error = new ResponseError(LocalDateTime.now(), MISSING_PARAMS, details);
+        ApiError error = new ApiError(LocalDateTime.now(), BAD_REQUEST, MISSING_PARAMS, details);
 
-        return ResponseMapper.errorToEntity(error, BAD_REQUEST);
+        return ResponseMapper.errorToEntity(error);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e) {
         List<String> details = new ArrayList<>(Arrays.asList(e.getMessage()));
-        ResponseError error = new ResponseError(LocalDateTime.now(), MISMATCH_TYPE, details);
+        ApiError error = new ApiError(LocalDateTime.now(), BAD_REQUEST, MISMATCH_TYPE, details);
 
-        return ResponseMapper.errorToEntity(error, BAD_REQUEST);
+        return ResponseMapper.errorToEntity(error);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity handleConstraintViolationException(Exception e) {
         List<String> details = new ArrayList<>(Arrays.asList(e.getMessage()));
-        ResponseError error = new ResponseError(LocalDateTime.now(), CONSTRAINT_VIOLATION, details);
+        ApiError error = new ApiError(LocalDateTime.now(), BAD_REQUEST, CONSTRAINT_VIOLATION, details);
 
-        return ResponseMapper.errorToEntity(error, BAD_REQUEST);
+        return ResponseMapper.errorToEntity(error);
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleResourceNotFoundException(RuntimeException e) {
         List<String> details = new ArrayList<>(Arrays.asList(e.getMessage()));
-        ResponseError error = new ResponseError(LocalDateTime.now(), e.getMessage(), details);
+        ApiError error = new ApiError(LocalDateTime.now(), BAD_REQUEST, e.getMessage(), details);
 
-        return ResponseMapper.errorToEntity(error, BAD_REQUEST);
+        return ResponseMapper.errorToEntity(error);
     }
 
     @Override
@@ -111,9 +111,9 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
             HttpStatus status, WebRequest request) {
         List<String> details = new ArrayList<>();
         details.add(String.format(NOT_FOUND_METHOD_FOR_URL, e.getHttpMethod(), e.getRequestURL()));
-        ResponseError error = new ResponseError(LocalDateTime.now(), METHOD_NOT_FOUND, details);
+        ApiError error = new ApiError(LocalDateTime.now(), BAD_REQUEST, METHOD_NOT_FOUND, details);
 
-        return ResponseMapper.errorToEntity(error, BAD_REQUEST);
+        return ResponseMapper.errorToEntity(error);
     }
 
 }
