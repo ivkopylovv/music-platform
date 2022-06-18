@@ -49,10 +49,10 @@ public class Song {
     @DateTimeFormat(pattern = RELEASE_MUSIC_FORMAT)
     private Date releaseDate;
 
-    @ManyToOne(fetch = EAGER, cascade = ALL)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "album_id", nullable = false)
     private Album album;
 
-    @ManyToMany(fetch = EAGER, cascade = ALL)
+    @ManyToMany(fetch = EAGER)
     private Set<Artist> artists = new HashSet<>();
 }

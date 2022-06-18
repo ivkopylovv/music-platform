@@ -40,7 +40,7 @@ public class User {
     private String lastName;
     private String imageName;
 
-    @ManyToMany(fetch = EAGER, cascade = ALL)
+    @ManyToMany(fetch = EAGER)
     private Set<Role> roles = new HashSet<>();
 
 }
