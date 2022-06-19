@@ -1,10 +1,6 @@
 package com.kopylov.musicplatform.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 import javax.persistence.Entity;

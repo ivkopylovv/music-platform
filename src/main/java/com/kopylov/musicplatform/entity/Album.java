@@ -2,11 +2,7 @@ package com.kopylov.musicplatform.entity;
 
 import com.kopylov.musicplatform.enums.AlbumGenre;
 import com.kopylov.musicplatform.enums.AlbumType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
 import java.sql.Date;
 import java.sql.Time;
 

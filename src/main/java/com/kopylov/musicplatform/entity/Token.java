@@ -1,19 +1,10 @@
 package com.kopylov.musicplatform.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
+import javax.persistence.*;
 import java.util.Date;
 
 import static com.kopylov.musicplatform.constants.DateFormat.TOKEN_EXPIRATION_FORMAT;
