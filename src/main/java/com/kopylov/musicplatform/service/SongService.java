@@ -9,7 +9,7 @@ public interface SongService {
 
     List<Song> getSongs();
 
-    List<Song> getSortedSongs(boolean asc, String sortParam);
+    List<Song> getSortedSongs(boolean asc, String attribute);
 
     void saveSong(Song song);
 

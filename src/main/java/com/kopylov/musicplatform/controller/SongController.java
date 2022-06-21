@@ -1,6 +1,7 @@
 package com.kopylov.musicplatform.controller;
 
 import com.kopylov.musicplatform.dto.response.CountDTO;
+import com.kopylov.musicplatform.dto.response.SongListDTO;
 import com.kopylov.musicplatform.dto.response.SuccessMessageDTO;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.service.SongService;
@@ -24,14 +25,16 @@ public class SongController {
     }
 
     @GetMapping(value = "/songs")
-    ResponseEntity<List<Song>> getSongs() {
-        return ResponseEntity.ok().body(songService.getSongs());
+    ResponseEntity<SongListDTO> getSongs() {
+        List<Song> songs = songService.getSongs();
+        return ResponseEntity.ok().body(new SongListDTO(songs));
     }
 
     @GetMapping(value = "/songs", params = {"asc", "attribute"})
-    ResponseEntity<List<Song>> getSortedSongs(
+    ResponseEntity<SongListDTO> getSortedSongs(
             @RequestParam("asc") boolean asc, @RequestParam("attribute") String attribute) {
-        return ResponseEntity.ok().body(songService.getSortedSongs(asc, attribute));
+        List<Song> songs = songService.getSortedSongs(asc, attribute);
+        return ResponseEntity.ok().body(new SongListDTO(songs));
     }
 
     @PostMapping(value = "/songs")

@@ -20,7 +20,6 @@ public class ApiError {
     @JsonFormat(shape = STRING, pattern = API_ERROR_FORMAT)
     private LocalDateTime timestamp;
 
-    private HttpStatus status;
     private String message;
     private List<String> errors;
 }
