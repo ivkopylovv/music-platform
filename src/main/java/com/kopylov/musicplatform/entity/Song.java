@@ -29,9 +29,6 @@ public class Song {
     private String title;
 
     @NonNull
-    private String audioName;
-
-    @NonNull
     private Time duration;
 
     @NonNull

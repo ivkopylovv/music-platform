@@ -1,14 +1,15 @@
 package com.kopylov.musicplatform.controller;
 
-import com.kopylov.musicplatform.dto.response.CountDTO;
-import com.kopylov.musicplatform.dto.response.SongListDTO;
-import com.kopylov.musicplatform.dto.response.SuccessMessageDTO;
+import com.kopylov.musicplatform.dto.response.*;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.service.SongService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.kopylov.musicplatform.constants.SuccessMessage.*;
@@ -37,9 +38,9 @@ public class SongController {
         return ResponseEntity.ok().body(new SongListDTO(songs));
     }
 
-    @PostMapping(value = "/songs")
-    ResponseEntity<SuccessMessageDTO> saveSong(@RequestBody Song song) {
-        songService.saveSong(song);
+    @PostMapping(value = "/songs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<SuccessMessageDTO> saveSong(@ModelAttribute SaveSongDTO songDTO) throws IOException {
+        songService.saveSong(songDTO);
         return ResponseEntity.ok().body(new SuccessMessageDTO(SONG_WAS_SAVED));
     }
 
@@ -61,7 +62,15 @@ public class SongController {
     }
 
     @GetMapping(value = "songs/search/{title}")
-    ResponseEntity<List<Song>> findSongsByTitle(@PathVariable String title) {
-        return ResponseEntity.ok().body(songService.findSongs(title));
+    ResponseEntity<SongListDTO> findSongsByTitle(@PathVariable String title) {
+        List<Song> songs = songService.findSongsByTitle(title);
+        return ResponseEntity.ok().body(new SongListDTO(songs));
     }
+
+    @GetMapping(value = "/songs/audio/{id}")
+    ResponseEntity<SongAudioDTO> getSongAudio(@PathVariable Long id) {
+        String audioName = songService.getSongAudio(id);
+        return ResponseEntity.ok().body(new SongAudioDTO(audioName));
+    }
+
 }

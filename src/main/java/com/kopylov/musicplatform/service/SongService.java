@@ -1,7 +1,9 @@
 package com.kopylov.musicplatform.service;
 
+import com.kopylov.musicplatform.dto.response.SaveSongDTO;
 import com.kopylov.musicplatform.entity.Song;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface SongService {
@@ -11,7 +13,7 @@ public interface SongService {
 
     List<Song> getSortedSongs(boolean asc, String attribute);
 
-    void saveSong(Song song);
+    void saveSong(SaveSongDTO songDTO) throws IOException;
 
     void deleteSong(Long id);
 
@@ -19,5 +21,7 @@ public interface SongService {
 
     Long getSongsCount();
 
-    List<Song> findSongs(String title);
+    List<Song> findSongsByTitle(String title);
+
+    String getSongAudio(Long id);
 }

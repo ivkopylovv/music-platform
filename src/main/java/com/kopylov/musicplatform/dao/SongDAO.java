@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface SongDAO extends JpaRepository<Song, Long> {
     List<Song> findSongsByTitleContaining(String title);
+
     List<Song> findSongsByAlbumId(Long id);
+
     void deleteSongByAlbumId(Long id);
 }
