@@ -1,7 +1,8 @@
 package com.kopylov.musicplatform.exception.handler;
 
+import com.kopylov.musicplatform.exception.NotFoundException;
 import com.kopylov.musicplatform.exception.data.ApiError;
-import com.kopylov.musicplatform.mapper.ResponseErrorMapper;
+import com.kopylov.musicplatform.mapper.response.ResponseErrorMapper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 import static com.kopylov.musicplatform.constants.GlobalErrorDetail.*;
 import static com.kopylov.musicplatform.constants.GlobalErrorMessage.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
 public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandler {
@@ -97,12 +100,28 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
         return ResponseErrorMapper.errorToEntity(error, BAD_REQUEST);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity handleResourceNotFoundException(NotFoundException e) {
+        List<String> details = new ArrayList<>(Arrays.asList(e.getMessage()));
+        ApiError error = new ApiError(LocalDateTime.now(), e.getMessage(), details);
+
+        return ResponseErrorMapper.errorToEntity(error, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity handleResourceNotFoundException(IOException e) {
+        List<String> details = new ArrayList<>(Arrays.asList(e.getMessage()));
+        ApiError error = new ApiError(LocalDateTime.now(), e.getMessage(), details);
+
+        return ResponseErrorMapper.errorToEntity(error, INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity handleResourceNotFoundException(RuntimeException e) {
         List<String> details = new ArrayList<>(Arrays.asList(e.getMessage()));
         ApiError error = new ApiError(LocalDateTime.now(), e.getMessage(), details);
 
-        return ResponseErrorMapper.errorToEntity(error, BAD_REQUEST);
+        return ResponseErrorMapper.errorToEntity(error, INTERNAL_SERVER_ERROR);
     }
 
     @Override
