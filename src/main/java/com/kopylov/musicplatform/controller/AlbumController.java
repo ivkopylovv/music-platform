@@ -1,5 +1,6 @@
 package com.kopylov.musicplatform.controller;
 
+import com.kopylov.musicplatform.dto.request.SaveAlbumDTO;
 import com.kopylov.musicplatform.dto.response.AlbumDTO;
 import com.kopylov.musicplatform.dto.response.AlbumListDTO;
 import com.kopylov.musicplatform.dto.response.CountDTO;
@@ -10,9 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.kopylov.musicplatform.constants.SuccessMessage.*;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -20,9 +23,15 @@ import static com.kopylov.musicplatform.constants.SuccessMessage.*;
 public class AlbumController {
     private final AlbumService albumService;
 
+
     @GetMapping(value = "/albums/{id}")
-    ResponseEntity<AlbumDTO> getAlbumById(@PathVariable("id") Long id) {
+    ResponseEntity<Album> getAlbumById(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(albumService.getAlbum(id));
+    }
+
+    @GetMapping(value = "/albums/detail/{id}")
+    ResponseEntity<AlbumDTO> getDetailedAlbumById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(albumService.getDetailedAlbum(id));
     }
 
     @GetMapping(value = "/albums")
@@ -38,9 +47,9 @@ public class AlbumController {
         return ResponseEntity.ok().body(new AlbumListDTO(albums));
     }
 
-    @PostMapping(value = "/albums")
-    ResponseEntity<SuccessMessageDTO> saveAlbum(@RequestBody Album album) {
-        albumService.saveAlbum(album);
+    @PostMapping(value = "/albums", consumes = MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<SuccessMessageDTO> saveAlbum(@ModelAttribute SaveAlbumDTO dto) throws IOException {
+        albumService.saveAlbum(dto);
         return ResponseEntity.ok().body(new SuccessMessageDTO(ALBUM_WAS_SAVED));
     }
 
@@ -62,7 +71,8 @@ public class AlbumController {
     }
 
     @GetMapping(value = "albums/search/{title}")
-    ResponseEntity<List<Album>> findAlbumsByTitle(@PathVariable String title) {
-        return ResponseEntity.ok().body(albumService.findAlbumByTitle(title));
+    ResponseEntity<AlbumListDTO> findAlbumsByTitle(@PathVariable String title) {
+        List<Album> albums = albumService.findAlbumsByTitle(title);
+        return ResponseEntity.ok().body(new AlbumListDTO(albums));
     }
 }

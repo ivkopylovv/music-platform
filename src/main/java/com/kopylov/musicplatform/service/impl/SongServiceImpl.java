@@ -11,7 +11,7 @@ import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.entity.SongAudio;
 import com.kopylov.musicplatform.exception.NotFoundException;
 import com.kopylov.musicplatform.helper.FileHelper;
-import com.kopylov.musicplatform.mapper.request.SongRequestMapper;
+import com.kopylov.musicplatform.mapper.request.RequestSongMapper;
 import com.kopylov.musicplatform.service.SongService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.kopylov.musicplatform.constants.ErrorMessage.*;
-import static com.kopylov.musicplatform.constants.FilePath.*;
+import static com.kopylov.musicplatform.constants.FilePath.DB_AUDIO_PATH;
+import static com.kopylov.musicplatform.constants.FilePath.STATIC_AUDIO_PATH;
 
 @Service
 @Transactional
@@ -65,7 +66,7 @@ public class SongServiceImpl implements SongService {
         FileHelper.saveUploadedFile(audio, STATIC_AUDIO_PATH);
         String audioName = DB_AUDIO_PATH + audio.getOriginalFilename();
 
-        Song savedSong = songDAO.save(SongRequestMapper.saveSongDTOToEntity(songDTO, album, artists));
+        Song savedSong = songDAO.save(RequestSongMapper.saveSongDTOToEntity(songDTO, album, artists));
         songAudioDAO.save(new SongAudio(null, savedSong, audioName));
     }
 

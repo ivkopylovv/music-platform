@@ -18,7 +18,6 @@ import java.util.Set;
 public class SongArtistDTO {
     private Long id;
     private String title;
-    private String audioName;
     private Time duration;
     private Date releaseDate;
     private Set<Artist> artists;

@@ -9,7 +9,7 @@ import lombok.experimental.UtilityClass;
 import java.util.List;
 
 @UtilityClass
-public class SongRequestMapper {
+public class RequestSongMapper {
 
     public Song saveSongDTOToEntity(SaveSongDTO dto, Album album, List<Artist> artists) {
         Song song = new Song();

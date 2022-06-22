@@ -3,7 +3,6 @@ package com.kopylov.musicplatform.controller;
 import com.kopylov.musicplatform.dto.response.*;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.service.SongService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

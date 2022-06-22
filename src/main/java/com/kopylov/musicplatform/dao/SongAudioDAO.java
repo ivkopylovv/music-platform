@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface SongAudioDAO extends JpaRepository<SongAudio, Long> {
     void deleteBySongId(Long id);
+
     Optional<SongAudio> findBySongId(Long id);
 }
