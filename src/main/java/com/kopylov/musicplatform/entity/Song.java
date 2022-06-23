@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static com.kopylov.musicplatform.constants.DateFormat.RELEASE_MUSIC_FORMAT;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
@@ -22,7 +22,7 @@ import static javax.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class Song {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @NonNull

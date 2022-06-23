@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
@@ -16,7 +16,7 @@ import static javax.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class SongAudio {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @OneToOne(fetch = EAGER)

@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import static javax.persistence.EnumType.STRING;
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
@@ -20,7 +20,7 @@ import static javax.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class Role {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Enumerated(STRING)

@@ -1,6 +1,10 @@
 package com.kopylov.musicplatform.controller;
 
-import com.kopylov.musicplatform.dto.response.*;
+import com.kopylov.musicplatform.dto.request.SaveSongDTO;
+import com.kopylov.musicplatform.dto.response.CountDTO;
+import com.kopylov.musicplatform.dto.response.SongAudioDTO;
+import com.kopylov.musicplatform.dto.response.SongListDTO;
+import com.kopylov.musicplatform.dto.response.SuccessMessageDTO;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.service.SongService;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +64,7 @@ public class SongController {
         return ResponseEntity.ok().body(new CountDTO(songService.getSongsCount()));
     }
 
-    @GetMapping(value = "songs/search/{title}")
+    @GetMapping(value = "songs/{title}")
     ResponseEntity<SongListDTO> findSongsByTitle(@PathVariable String title) {
         List<Song> songs = songService.findSongsByTitle(title);
         return ResponseEntity.ok().body(new SongListDTO(songs));

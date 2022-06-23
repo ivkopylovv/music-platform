@@ -1,6 +1,6 @@
 package com.kopylov.musicplatform.service;
 
-import com.kopylov.musicplatform.dto.response.SaveSongDTO;
+import com.kopylov.musicplatform.dto.request.SaveSongDTO;
 import com.kopylov.musicplatform.entity.Song;
 
 import java.io.IOException;

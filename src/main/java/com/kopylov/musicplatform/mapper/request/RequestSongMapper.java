@@ -1,6 +1,6 @@
 package com.kopylov.musicplatform.mapper.request;
 
-import com.kopylov.musicplatform.dto.response.SaveSongDTO;
+import com.kopylov.musicplatform.dto.request.SaveSongDTO;
 import com.kopylov.musicplatform.entity.Album;
 import com.kopylov.musicplatform.entity.Artist;
 import com.kopylov.musicplatform.entity.Song;

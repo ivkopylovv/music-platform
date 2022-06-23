@@ -23,7 +23,6 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 public class AlbumController {
     private final AlbumService albumService;
 
-
     @GetMapping(value = "/albums/{id}")
     ResponseEntity<Album> getAlbumById(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(albumService.getAlbum(id));
@@ -70,7 +69,7 @@ public class AlbumController {
         return ResponseEntity.ok().body(new CountDTO(albumService.getAlbumsCount()));
     }
 
-    @GetMapping(value = "albums/search/{title}")
+    @GetMapping(value = "albums/{title}")
     ResponseEntity<AlbumListDTO> findAlbumsByTitle(@PathVariable String title) {
         List<Album> albums = albumService.findAlbumsByTitle(title);
         return ResponseEntity.ok().body(new AlbumListDTO(albums));

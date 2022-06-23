@@ -1,4 +1,4 @@
-package com.kopylov.musicplatform.dto.response;
+package com.kopylov.musicplatform.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

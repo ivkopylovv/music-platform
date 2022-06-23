@@ -10,7 +10,7 @@ import java.util.Date;
 import static com.kopylov.musicplatform.constants.DateFormat.TOKEN_EXPIRATION_FORMAT;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
@@ -20,7 +20,7 @@ import static javax.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class Token {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @NonNull

@@ -15,7 +15,7 @@ import java.sql.Time;
 
 import static com.kopylov.musicplatform.constants.DateFormat.RELEASE_MUSIC_FORMAT;
 import static javax.persistence.EnumType.STRING;
-import static javax.persistence.GenerationType.AUTO;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter
@@ -25,7 +25,7 @@ import static javax.persistence.GenerationType.AUTO;
 @AllArgsConstructor
 public class Album {
     @Id
-    @GeneratedValue(strategy = AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @NonNull

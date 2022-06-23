@@ -1,4 +1,4 @@
-package com.kopylov.musicplatform.mapper;
+package com.kopylov.musicplatform.mapper.response;
 
 import com.kopylov.musicplatform.dto.response.AlbumDTO;
 import com.kopylov.musicplatform.dto.response.SongArtistDTO;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @UtilityClass
-public class AlbumMapper {
+public class ResponseAlbumMapper {
 
     public AlbumDTO songListToAlbumDTO(List<Song> songs) {
         List<SongArtistDTO> songArtistDTOs = songs
@@ -17,11 +17,11 @@ public class AlbumMapper {
                 .map(song -> new SongArtistDTO(
                         song.getId(),
                         song.getTitle(),
-                        song.getAudioName(),
                         song.getDuration(),
                         song.getReleaseDate(),
                         song.getArtists()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()
+                );
 
         return new AlbumDTO(songs.get(0).getAlbum(), songArtistDTOs);
     }
