@@ -10,5 +10,7 @@ public interface SongAudioDAO extends JpaRepository<SongAudio, Long> {
 
     void deleteBySongId(Long id);
 
-    void deleteBySongAlbumId(Long id);
+    void deleteBySongAlbumId(Long albumId);
+
+    void deleteBySongArtistsId(Long artistId);
 }

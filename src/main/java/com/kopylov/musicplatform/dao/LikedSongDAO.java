@@ -21,4 +21,6 @@ public interface LikedSongDAO extends JpaRepository<LikedSong, LikedSongId> {
     void deleteByIdSongId(Long songId);
 
     void deleteByIdSongAlbumId(Long albumId);
+
+    void deleteByIdSongArtistsId(Long artistId);
 }
