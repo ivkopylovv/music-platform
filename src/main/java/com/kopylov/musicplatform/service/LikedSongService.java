@@ -16,7 +16,7 @@ public interface LikedSongService {
 
     void deleteSongFromLiked(Long songId, String username);
 
-    List<LikedSongDTO> findLikedSongs(String songTitle, String albumTitle, String artistName);
+    List<LikedSongDTO> findLikedSongs(String username, String songTitle, String albumTitle, String artistName);
 
     Long getLikedSongsCount();
 }

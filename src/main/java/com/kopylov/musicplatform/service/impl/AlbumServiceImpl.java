@@ -1,6 +1,5 @@
 package com.kopylov.musicplatform.service.impl;
 
-import com.kopylov.musicplatform.constants.ErrorMessage;
 import com.kopylov.musicplatform.dao.AlbumDAO;
 import com.kopylov.musicplatform.dao.LikedSongDAO;
 import com.kopylov.musicplatform.dao.SongAudioDAO;
@@ -23,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+import static com.kopylov.musicplatform.constants.ErrorMessage.ALBUM_NOT_FOUND;
 import static com.kopylov.musicplatform.constants.FilePath.DB_IMAGE_PATH;
 import static com.kopylov.musicplatform.constants.FilePath.STATIC_IMAGE_PATH;
 
@@ -38,7 +38,7 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public Album getAlbum(Long id) {
         return albumDAO.findById(id)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.ALBUM_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ALBUM_NOT_FOUND));
     }
 
     @Override
@@ -46,7 +46,7 @@ public class AlbumServiceImpl implements AlbumService {
         List<Song> songs = songDAO.findSongsByAlbumId(id);
 
         if (songs.isEmpty()) {
-            throw new NotFoundException(ErrorMessage.ALBUM_NOT_FOUND);
+            throw new NotFoundException(ALBUM_NOT_FOUND);
         }
 
         return ResponseAlbumMapper.songListToAlbumDTO(songs);
@@ -81,7 +81,7 @@ public class AlbumServiceImpl implements AlbumService {
     @Override
     public void updateAlbum(Long id, Album album) {
         Album foundAlbum = albumDAO.findById(id)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.ALBUM_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ALBUM_NOT_FOUND));
         album.setId(foundAlbum.getId());
         albumDAO.save(album);
     }

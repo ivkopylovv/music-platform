@@ -1,6 +1,5 @@
 package com.kopylov.musicplatform.service.impl;
 
-import com.kopylov.musicplatform.constants.ErrorMessage;
 import com.kopylov.musicplatform.dao.LikedSongDAO;
 import com.kopylov.musicplatform.dao.SongDAO;
 import com.kopylov.musicplatform.dao.UserDAO;
@@ -20,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.kopylov.musicplatform.constants.ErrorMessage.*;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class LikedSongServiceImpl implements LikedSongService {
     @Override
     public LikedSongDTO getLikedSong(Long songId, String username) {
         LikedSong likedSong = likedSongDAO.findByIdSongIdAndIdUserUsername(songId, username)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.LIKED_SONG_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(LIKED_SONG_NOT_FOUND));
         return ResponseLikedSongMapper.likedSongToDTO(likedSong);
     }
 
@@ -40,7 +41,7 @@ public class LikedSongServiceImpl implements LikedSongService {
         List<LikedSong> likedSongs = likedSongDAO.findByIdUserUsername(username);
 
         if (likedSongs.isEmpty()) {
-            throw new NotFoundException(ErrorMessage.LIKED_SONG_NOT_FOUND);
+            throw new NotFoundException(LIKED_SONG_NOT_FOUND);
         }
 
         return ResponseLikedSongMapper.likedSongListToDTOList(likedSongs);
@@ -55,7 +56,7 @@ public class LikedSongServiceImpl implements LikedSongService {
                 );
 
         if (likedSongs.isEmpty()) {
-            throw new NotFoundException(ErrorMessage.LIKED_SONG_NOT_FOUND);
+            throw new NotFoundException(LIKED_SONG_NOT_FOUND);
         }
 
         return ResponseLikedSongMapper.likedSongListToDTOList(likedSongs);
@@ -64,9 +65,9 @@ public class LikedSongServiceImpl implements LikedSongService {
     @Override
     public void addSongToLiked(AddSongToLikedDTO dto) {
         Song song = songDAO.findById(dto.getSongId())
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.SONG_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(SONG_NOT_FOUND));
         User user = userDAO.findByUsername(dto.getUsername())
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         LikedSongId id = new LikedSongId(song, user);
         LikedSong likedSong = new LikedSong(id, dto.getAddedDate());
@@ -77,9 +78,9 @@ public class LikedSongServiceImpl implements LikedSongService {
     @Override
     public void deleteSongFromLiked(Long songId, String username) {
         Song song = songDAO.findById(songId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.SONG_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(SONG_NOT_FOUND));
         User user = userDAO.findByUsername(username)
-                .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         LikedSongId id = new LikedSongId(song, user);
 
@@ -87,10 +88,10 @@ public class LikedSongServiceImpl implements LikedSongService {
     }
 
     @Override
-    public List<LikedSongDTO> findLikedSongs(String songTitle, String albumTitle, String artistName) {
+    public List<LikedSongDTO> findLikedSongs(String username, String songTitle, String albumTitle, String artistName) {
         List<LikedSong> songs = likedSongDAO
-                .findByIdSongTitleContainingOrIdSongAlbumTitleContainingOrIdSongArtistsNameContaining(
-                        songTitle, albumTitle, artistName);
+                .findByIdUserUsernameAndIdSongTitleContainingOrIdSongAlbumTitleContainingOrIdSongArtistsNameContaining(
+                        username, songTitle, albumTitle, artistName);
 
         return ResponseLikedSongMapper.likedSongListToDTOList(songs);
     }

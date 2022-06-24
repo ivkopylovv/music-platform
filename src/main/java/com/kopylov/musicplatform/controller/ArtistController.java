@@ -46,26 +46,26 @@ public class ArtistController {
     }
 
     @PostMapping(value = "/artists", consumes = MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<SuccessMessageDTO> saveAlbum(@ModelAttribute SaveUpdateArtistDTO dto) throws IOException {
+    ResponseEntity<SuccessMessageDTO> saveArtist(@ModelAttribute SaveUpdateArtistDTO dto) throws IOException {
         artistService.saveArtist(dto);
         return ResponseEntity.ok().body(new SuccessMessageDTO(ARTIST_WAS_SAVED));
     }
 
     @DeleteMapping(value = "/artists/{id}")
-    ResponseEntity<SuccessMessageDTO> deleteAlbum(@PathVariable("id") Long id) {
+    ResponseEntity<SuccessMessageDTO> deleteArtist(@PathVariable("id") Long id) {
         artistService.deleteArtist(id);
         return ResponseEntity.ok().body(new SuccessMessageDTO(ARTIST_WAS_UPDATED));
     }
 
     @PutMapping(value = "/artists/{id}", consumes = MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<SuccessMessageDTO> updateAlbum(
+    ResponseEntity<SuccessMessageDTO> updateArtist(
             @PathVariable("id") Long id, @ModelAttribute SaveUpdateArtistDTO dto) throws IOException {
         artistService.updateArtist(id, dto);
         return ResponseEntity.ok().body(new SuccessMessageDTO(ARTIST_WAS_DELETED));
     }
 
     @GetMapping(value = "artists/{name}")
-    ResponseEntity<ArtistListDTO> findAlbumsByTitle(@PathVariable String name) {
+    ResponseEntity<ArtistListDTO> findArtistsByTitle(@PathVariable String name) {
         List<Artist> artists = artistService.findArtistByName(name);
         return ResponseEntity.ok().body(new ArtistListDTO(artists));
     }

@@ -15,8 +15,8 @@ public interface LikedSongDAO extends JpaRepository<LikedSong, LikedSongId> {
 
     List<LikedSong> findByIdUserUsername(String username, Sort sort);
 
-    List<LikedSong> findByIdSongTitleContainingOrIdSongAlbumTitleContainingOrIdSongArtistsNameContaining
-            (String songTitle, String albumTitle, String artistName);
+    List<LikedSong> findByIdUserUsernameAndIdSongTitleContainingOrIdSongAlbumTitleContainingOrIdSongArtistsNameContaining(
+            String username, String songTitle, String albumTitle, String artistName);
 
     void deleteByIdSongId(Long songId);
 
