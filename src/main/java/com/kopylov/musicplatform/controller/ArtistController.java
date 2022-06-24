@@ -64,7 +64,7 @@ public class ArtistController {
         return ResponseEntity.ok().body(new SuccessMessageDTO(ARTIST_WAS_DELETED));
     }
 
-    @GetMapping(value = "artists/{name}")
+    @GetMapping(value = "artists/find/{name}")
     ResponseEntity<ArtistListDTO> findArtistsByTitle(@PathVariable String name) {
         List<Artist> artists = artistService.findArtistByName(name);
         return ResponseEntity.ok().body(new ArtistListDTO(artists));

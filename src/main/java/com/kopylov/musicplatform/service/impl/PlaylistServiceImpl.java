@@ -105,7 +105,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public List<Song> findPlaylistSongs(
             String username, String playlistTitle, String songTitle, String albumTitle, String artistName) {
-        return playlistDAO.findSongsByIdUserUsernameAndIdTitleAndSongsTitleOrSongsAlbumTitleOrSongsArtistsName(
+        return playlistDAO.findPlaylistSongsByIdUserUsernameAndIdTitleAndSongsTitleOrSongsAlbumTitleOrSongsArtistsName(
                 username, playlistTitle, songTitle, albumTitle, artistName);
     }
 }

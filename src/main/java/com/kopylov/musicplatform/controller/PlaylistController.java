@@ -37,8 +37,8 @@ public class PlaylistController {
         return ResponseEntity.ok().body(playlistService.getDetailPlaylist(username, title));
     }
 
-    @GetMapping(value = "/playlists/{username}", params = {"username"})
-    ResponseEntity<PlaylistListDTO> getPlaylists(@PathVariable("username") String username) {
+    @GetMapping(value = "/playlists/{username}")
+    ResponseEntity<PlaylistListDTO> getPlaylists(@PathVariable String username) {
         List<PlaylistDTO> playlists = playlistService.getPlaylists(username);
         return ResponseEntity.ok().body(new PlaylistListDTO(playlists));
     }
@@ -73,7 +73,7 @@ public class PlaylistController {
         return ResponseEntity.ok().body(new SuccessMessageDTO(SONG_WAS_DELETED));
     }
 
-    @GetMapping(value = "/playlists", params = {"username", "title", "song-title", "album-title", "artist-name"})
+    @GetMapping(value = "/playlists/find", params = {"username", "title", "song-title", "album-title", "artist-name"})
     ResponseEntity<SongListDTO> findPlaylistSongs(
             @RequestParam("username") String username,
             @RequestParam("title") String title,

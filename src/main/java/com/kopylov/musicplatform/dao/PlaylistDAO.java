@@ -16,6 +16,12 @@ public interface PlaylistDAO extends JpaRepository<Playlist, PlaylistId> {
 
     List<Playlist> findByIdUserUsername(String username, Sort sort);
 
-    List<Song> findSongsByIdUserUsernameAndIdTitleAndSongsTitleOrSongsAlbumTitleOrSongsArtistsName(
+    List<Song> findPlaylistSongsByIdUserUsernameAndIdTitleAndSongsTitleOrSongsAlbumTitleOrSongsArtistsName(
             String username, String playlistTitle, String songTitle, String albumTitle, String artistName);
+
+    void deleteSongBySongsId(Long songId);
+
+    void deleteSongBySongsAlbumId(Long albumId);
+
+    void deleteSongBySongsArtistsId(Long artistId);
 }

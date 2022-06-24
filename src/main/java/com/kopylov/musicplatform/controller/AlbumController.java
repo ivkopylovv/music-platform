@@ -69,7 +69,7 @@ public class AlbumController {
         return ResponseEntity.ok().body(new CountDTO(albumService.getAlbumsCount()));
     }
 
-    @GetMapping(value = "albums/{title}")
+    @GetMapping(value = "albums/find/{title}")
     ResponseEntity<AlbumListDTO> findAlbumsByTitle(@PathVariable String title) {
         List<Album> albums = albumService.findAlbumsByTitle(title);
         return ResponseEntity.ok().body(new AlbumListDTO(albums));

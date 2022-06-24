@@ -55,7 +55,7 @@ public class LikedSongController {
         return ResponseEntity.ok().body(new SuccessMessageDTO(SONG_WAS_DELETED));
     }
 
-    @GetMapping(value = "/liked-songs", params = {"username", "song-title", "album-title", "artist-name"})
+    @GetMapping(value = "/liked-songs/find", params = {"username", "song-title", "album-title", "artist-name"})
     ResponseEntity<LikedSongListDTO> findLikedSongs(
             @RequestParam("username") String username,
             @RequestParam("song-title") String songTitle,

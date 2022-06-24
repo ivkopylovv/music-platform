@@ -64,7 +64,7 @@ public class SongController {
         return ResponseEntity.ok().body(new CountDTO(songService.getSongsCount()));
     }
 
-    @GetMapping(value = "songs/{title}")
+    @GetMapping(value = "songs/find/{title}")
     ResponseEntity<SongListDTO> findSongsByTitle(@PathVariable String title) {
         List<Song> songs = songService.findSongsByTitle(title);
         return ResponseEntity.ok().body(new SongListDTO(songs));

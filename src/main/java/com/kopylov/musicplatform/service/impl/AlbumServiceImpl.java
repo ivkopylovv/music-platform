@@ -1,9 +1,6 @@
 package com.kopylov.musicplatform.service.impl;
 
-import com.kopylov.musicplatform.dao.AlbumDAO;
-import com.kopylov.musicplatform.dao.LikedSongDAO;
-import com.kopylov.musicplatform.dao.SongAudioDAO;
-import com.kopylov.musicplatform.dao.SongDAO;
+import com.kopylov.musicplatform.dao.*;
 import com.kopylov.musicplatform.dto.request.SaveAlbumDTO;
 import com.kopylov.musicplatform.dto.response.AlbumDTO;
 import com.kopylov.musicplatform.entity.Album;
@@ -34,6 +31,7 @@ public class AlbumServiceImpl implements AlbumService {
     private final AlbumDAO albumDAO;
     private final LikedSongDAO likedSongDAO;
     private final SongAudioDAO songAudioDAO;
+    private final PlaylistDAO playlistDAO;
 
     @Override
     public Album getAlbum(Long id) {
@@ -72,6 +70,7 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     public void deleteAlbum(Long id) {
+        playlistDAO.deleteSongBySongsAlbumId(id);
         likedSongDAO.deleteByIdSongAlbumId(id);
         songAudioDAO.deleteBySongAlbumId(id);
         songDAO.deleteSongByAlbumId(id);

@@ -32,6 +32,7 @@ public class SongServiceImpl implements SongService {
     private final ArtistDAO artistDAO;
     private final SongAudioDAO songAudioDAO;
     private final LikedSongDAO likedSongDAO;
+    private final PlaylistDAO playlistDAO;
 
     @Override
     public Song getSong(Long id) {
@@ -70,6 +71,7 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public void deleteSong(Long id) {
+        playlistDAO.deleteSongBySongsId(id);
         likedSongDAO.deleteByIdSongId(id);
         songAudioDAO.deleteBySongId(id);
         songDAO.deleteById(id);
