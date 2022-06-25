@@ -4,10 +4,12 @@ import com.kopylov.musicplatform.entity.LikedSong;
 import com.kopylov.musicplatform.entity.compositekey.LikedSongId;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface LikedSongDAO extends JpaRepository<LikedSong, LikedSongId> {
     Optional<LikedSong> findByIdSongIdAndIdUserUsername(Long songId, String username);
 

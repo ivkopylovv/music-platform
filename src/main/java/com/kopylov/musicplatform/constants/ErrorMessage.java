@@ -9,4 +9,8 @@ public class ErrorMessage {
     public static final String USER_NOT_FOUND = "User Not Found";
     public static final String ARTIST_NOT_FOUND = "Artist Not Found";
     public static final String PLAYLIST_NOT_FOUND = "Playlist Not Found";
+    public static final String TOKEN_NOT_FOUND = "Token Not Found";
+
+
+    public static final String USER_ALREADY_EXISTS = "User Already Exists";
 }
