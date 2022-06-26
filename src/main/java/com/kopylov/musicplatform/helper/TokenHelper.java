@@ -12,10 +12,11 @@ import org.springframework.security.core.userdetails.User;
 import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 
+import static com.kopylov.musicplatform.constants.TokenOption.CLAIMS;
+
 @UtilityClass
 public class TokenHelper {
     private final String SECRET_KEY = "secret";
-    private final String CLAIMS_NAME = "roles";
 
     public Algorithm getToken() {
         return Algorithm.HMAC256((SECRET_KEY).getBytes());
@@ -27,7 +28,7 @@ public class TokenHelper {
                 .withSubject(user.getUsername())
                 .withExpiresAt(DateHelper.getAccessTokenTimeAlive())
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim(CLAIMS_NAME, user.getAuthorities()
+                .withClaim(CLAIMS, user.getAuthorities()
                         .stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList()))
@@ -40,7 +41,7 @@ public class TokenHelper {
                 .withSubject(user.getUsername())
                 .withExpiresAt(DateHelper.getAccessTokenTimeAlive())
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim(CLAIMS_NAME, user.getRoles()
+                .withClaim(CLAIMS, user.getRoles()
                         .stream()
                         .map(Role::getName)
                         .map(roleName -> roleName.toString())
@@ -70,7 +71,7 @@ public class TokenHelper {
         return authorizationHeader.substring("Bearer ".length());
     }
 
-    public String getUserLoginByToken(String token) {
+    public String getUsernameByToken(String token) {
         Algorithm algorithm = getToken();
         JWTVerifier verifier = JWT.require(algorithm).build();
         DecodedJWT decodedJWT = verifier.verify(token);

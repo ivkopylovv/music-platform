@@ -15,4 +15,6 @@ public class SuccessMessage {
     public static final String ARTIST_WAS_DELETED = "Artist Was Deleted";
     public static final String ARTIST_WAS_UPDATED = "Artist Was Updated";
     public static final String PLAYLIST_WAS_CREATED = "Playlist Was Created";
+
+    public static final String USER_HAS_BEEN_REGISTERED = "User Has Been Registered";
 }

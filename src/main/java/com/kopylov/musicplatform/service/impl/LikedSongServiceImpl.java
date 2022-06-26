@@ -1,8 +1,8 @@
 package com.kopylov.musicplatform.service.impl;
 
+import com.kopylov.musicplatform.dao.AuthDAO;
 import com.kopylov.musicplatform.dao.LikedSongDAO;
 import com.kopylov.musicplatform.dao.SongDAO;
-import com.kopylov.musicplatform.dao.UserDAO;
 import com.kopylov.musicplatform.dto.request.AddSongToLikedDTO;
 import com.kopylov.musicplatform.dto.response.LikedSongDTO;
 import com.kopylov.musicplatform.entity.LikedSong;
@@ -27,7 +27,7 @@ import static com.kopylov.musicplatform.constants.ErrorMessage.*;
 public class LikedSongServiceImpl implements LikedSongService {
     private final LikedSongDAO likedSongDAO;
     private final SongDAO songDAO;
-    private final UserDAO userDAO;
+    private final AuthDAO authDAO;
 
     @Override
     public LikedSongDTO getLikedSong(Long songId, String username) {
@@ -66,7 +66,7 @@ public class LikedSongServiceImpl implements LikedSongService {
     public void addSongToLiked(AddSongToLikedDTO dto) {
         Song song = songDAO.findById(dto.getSongId())
                 .orElseThrow(() -> new NotFoundException(SONG_NOT_FOUND));
-        User user = userDAO.findByUsername(dto.getUsername())
+        User user = authDAO.findUserByUsername(dto.getUsername())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         LikedSongId id = new LikedSongId(song, user);
@@ -79,7 +79,7 @@ public class LikedSongServiceImpl implements LikedSongService {
     public void deleteSongFromLiked(Long songId, String username) {
         Song song = songDAO.findById(songId)
                 .orElseThrow(() -> new NotFoundException(SONG_NOT_FOUND));
-        User user = userDAO.findByUsername(username)
+        User user = authDAO.findUserByUsername(username)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         LikedSongId id = new LikedSongId(song, user);

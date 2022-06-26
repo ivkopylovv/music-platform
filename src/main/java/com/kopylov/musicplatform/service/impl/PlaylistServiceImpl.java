@@ -1,8 +1,8 @@
 package com.kopylov.musicplatform.service.impl;
 
+import com.kopylov.musicplatform.dao.AuthDAO;
 import com.kopylov.musicplatform.dao.PlaylistDAO;
 import com.kopylov.musicplatform.dao.SongDAO;
-import com.kopylov.musicplatform.dao.UserDAO;
 import com.kopylov.musicplatform.dto.request.AddSongToPlaylist;
 import com.kopylov.musicplatform.dto.request.CreatePlaylistDTO;
 import com.kopylov.musicplatform.dto.response.PlaylistDTO;
@@ -33,7 +33,7 @@ import static com.kopylov.musicplatform.constants.FilePath.STATIC_IMAGE_PATH;
 public class PlaylistServiceImpl implements PlaylistService {
     private final PlaylistDAO playlistDAO;
     private final SongDAO songDAO;
-    private final UserDAO userDAO;
+    private final AuthDAO authDAO;
 
     @Override
     public PlaylistDTO getPlaylist(String username, String title) {
@@ -75,7 +75,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         FileHelper.saveUploadedFile(file, STATIC_IMAGE_PATH);
         String imageName = DB_IMAGE_PATH + file.getOriginalFilename();
 
-        User user = userDAO.findByUsername(dto.getUsername())
+        User user = authDAO.findUserByUsername(dto.getUsername())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         PlaylistId id = new PlaylistId(user, dto.getTitle());
         Playlist playlist = new Playlist(id, imageName, dto.getDescription(), null);

@@ -1,7 +1,11 @@
 package com.kopylov.musicplatform.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kopylov.musicplatform.exception.data.ApiError;
+import com.kopylov.musicplatform.helper.DateHelper;
 import com.kopylov.musicplatform.helper.TokenHelper;
+import com.kopylov.musicplatform.mapper.response.ResponseTokensMapper;
+import com.kopylov.musicplatform.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,15 +19,16 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
+import static com.kopylov.musicplatform.constants.ErrorMessage.LOGIN_OR_PASSWORD_ARE_INCORRECT;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RequiredArgsConstructor
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -41,9 +46,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String access_token = TokenHelper.getAccessToken(user, request);
         String refresh_token = TokenHelper.getRefreshToken(user, request);
 
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
+        tokenService.saveToken(user.getUsername(), refresh_token);
+        Map<String, String> tokens = ResponseTokensMapper.getTokensMap(access_token, refresh_token);
+
         response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
@@ -51,9 +56,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         SecurityContextHolder.clearContext();
+
+        ApiError apiError = new ApiError(
+                DateHelper.getCurrentDate(),
+                FORBIDDEN.value(),
+                FORBIDDEN,
+                LOGIN_OR_PASSWORD_ARE_INCORRECT,
+                request.getServletPath()
+        );
+
         response.setStatus(FORBIDDEN.value());
         response.setContentType(APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), "FORBIDDEN");
+        new ObjectMapper().writeValue(response.getOutputStream(), apiError);
     }
 
 
