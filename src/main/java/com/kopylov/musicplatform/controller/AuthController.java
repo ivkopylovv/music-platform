@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.kopylov.musicplatform.constants.SuccessMessage.USER_HAS_BEEN_LOGGED_OUT;
 import static com.kopylov.musicplatform.constants.SuccessMessage.USER_HAS_BEEN_REGISTERED;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RestController
 @RequestMapping("api/v1")
@@ -29,4 +31,11 @@ public class AuthController {
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         authService.refreshToken(request, response);
     }
+
+    @GetMapping(value = "auth/logout")
+    ResponseEntity<SuccessMessageDTO> logout(HttpServletRequest request) {
+        authService.logout(request.getHeader(AUTHORIZATION));
+        return ResponseEntity.ok().body(new SuccessMessageDTO(USER_HAS_BEEN_LOGGED_OUT));
+    }
+
 }

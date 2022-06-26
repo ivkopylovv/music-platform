@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static com.kopylov.musicplatform.constants.ErrorMessage.TOKEN_IS_EXPIRED;
+import static com.kopylov.musicplatform.constants.ErrorMessage.TOKEN_NOT_VALID;
 import static com.kopylov.musicplatform.constants.TokenOption.CLAIMS;
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -59,7 +59,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                             DateHelper.getCurrentDate(),
                             FORBIDDEN.value(),
                             FORBIDDEN,
-                            TOKEN_IS_EXPIRED,
+                            TOKEN_NOT_VALID,
                             request.getServletPath()
                     );
 

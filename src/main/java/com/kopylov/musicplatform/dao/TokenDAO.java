@@ -9,4 +9,6 @@ public interface TokenDAO extends JpaRepository<Token, Long> {
     Optional<Token> findByToken(String token);
 
     Optional<Token> findByUserUsername(String username);
+
+    void deleteByUserUsername(String username);
 }

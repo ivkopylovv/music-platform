@@ -17,4 +17,5 @@ public class SuccessMessage {
     public static final String PLAYLIST_WAS_CREATED = "Playlist Was Created";
 
     public static final String USER_HAS_BEEN_REGISTERED = "User Has Been Registered";
+    public static final String USER_HAS_BEEN_LOGGED_OUT = "User Has Been Logged Out";
 }

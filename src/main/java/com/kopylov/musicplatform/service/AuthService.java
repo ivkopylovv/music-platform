@@ -10,4 +10,6 @@ public interface AuthService {
     void registerUser(UserCredsDTO userCreds);
 
     void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException;
+
+    void logout(String authorizationHeader);
 }

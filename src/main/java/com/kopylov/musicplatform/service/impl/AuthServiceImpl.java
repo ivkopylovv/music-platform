@@ -8,6 +8,7 @@ import com.kopylov.musicplatform.entity.Role;
 import com.kopylov.musicplatform.entity.User;
 import com.kopylov.musicplatform.enums.RoleName;
 import com.kopylov.musicplatform.exception.AlreadyExistsException;
+import com.kopylov.musicplatform.exception.NotFoundException;
 import com.kopylov.musicplatform.exception.UnauthorizedException;
 import com.kopylov.musicplatform.helper.DateHelper;
 import com.kopylov.musicplatform.helper.TokenHelper;
@@ -87,6 +88,13 @@ public class AuthServiceImpl implements UserDetailsService, AuthService {
         } else {
             throw new UnauthorizedException(USER_IS_UNAUTHORIZED);
         }
+    }
+
+    @Override
+    public void logout(String authorizationHeader) {
+        String token = TokenHelper.getTokenByAuthorizationHeader(authorizationHeader);
+        String username = TokenHelper.getUsernameByToken(token);
+        tokenDAO.deleteByUserUsername(username);
     }
 
     private void successfulRefresh(HttpServletRequest request, HttpServletResponse response, String authorizationHeader) throws IOException {

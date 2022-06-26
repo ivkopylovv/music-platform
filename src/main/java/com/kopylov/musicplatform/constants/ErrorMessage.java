@@ -12,6 +12,6 @@ public class ErrorMessage {
 
     public static final String USER_ALREADY_EXISTS = "User Already Exists";
     public static final String USER_IS_UNAUTHORIZED = "User is unauthorized";
-    public static final String TOKEN_IS_EXPIRED = "Token is expired";
+    public static final String TOKEN_NOT_VALID = "Token Not Valid";
     public static final String LOGIN_OR_PASSWORD_ARE_INCORRECT = "Login Or Password Are Incorrect";
 }
