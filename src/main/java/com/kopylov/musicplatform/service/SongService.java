@@ -1,6 +1,6 @@
 package com.kopylov.musicplatform.service;
 
-import com.kopylov.musicplatform.dto.request.SaveSongDTO;
+import com.kopylov.musicplatform.dto.request.SaveUpdateSongDTO;
 import com.kopylov.musicplatform.entity.Song;
 
 import java.io.IOException;
@@ -13,11 +13,11 @@ public interface SongService {
 
     List<Song> getSortedSongs(boolean asc, String attribute);
 
-    void saveSong(SaveSongDTO songDTO) throws IOException;
+    void saveSong(SaveUpdateSongDTO songDTO) throws IOException;
 
     void deleteSong(Long id);
 
-    void updateSong(Long id, Song song);
+    void updateSong(Long id, SaveUpdateSongDTO songDTO) throws IOException;
 
     Long getSongsCount();
 

@@ -1,6 +1,6 @@
 package com.kopylov.musicplatform.service;
 
-import com.kopylov.musicplatform.dto.request.SaveAlbumDTO;
+import com.kopylov.musicplatform.dto.request.SaveUpdateAlbumDTO;
 import com.kopylov.musicplatform.dto.response.AlbumDTO;
 import com.kopylov.musicplatform.entity.Album;
 
@@ -16,11 +16,11 @@ public interface AlbumService {
 
     List<Album> getSortedAlbums(boolean asc, String attribute);
 
-    void saveAlbum(SaveAlbumDTO saveAlbumDTO) throws IOException;
+    void saveAlbum(SaveUpdateAlbumDTO dto) throws IOException;
 
     void deleteAlbum(Long id);
 
-    void updateAlbum(Long id, Album album);
+    void updateAlbum(Long id, SaveUpdateAlbumDTO dto) throws IOException;
 
     Long getAlbumsCount();
 

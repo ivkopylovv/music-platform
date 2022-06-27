@@ -1,6 +1,6 @@
 package com.kopylov.musicplatform.controller;
 
-import com.kopylov.musicplatform.dto.request.SaveSongDTO;
+import com.kopylov.musicplatform.dto.request.SaveUpdateSongDTO;
 import com.kopylov.musicplatform.dto.response.CountDTO;
 import com.kopylov.musicplatform.dto.response.SongAudioDTO;
 import com.kopylov.musicplatform.dto.response.SongListDTO;
@@ -8,7 +8,6 @@ import com.kopylov.musicplatform.dto.response.SuccessMessageDTO;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.service.SongService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.kopylov.musicplatform.constants.SuccessMessage.*;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -41,8 +41,8 @@ public class SongController {
         return ResponseEntity.ok().body(new SongListDTO(songs));
     }
 
-    @PostMapping(value = "/songs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<SuccessMessageDTO> saveSong(@ModelAttribute SaveSongDTO songDTO) throws IOException {
+    @PostMapping(value = "/songs", consumes = MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<SuccessMessageDTO> saveSong(@ModelAttribute SaveUpdateSongDTO songDTO) throws IOException {
         songService.saveSong(songDTO);
         return ResponseEntity.ok().body(new SuccessMessageDTO(SONG_WAS_SAVED));
     }
@@ -53,9 +53,10 @@ public class SongController {
         return ResponseEntity.ok().body(new SuccessMessageDTO(SONG_WAS_DELETED));
     }
 
-    @PutMapping(value = "/songs/{id}")
-    ResponseEntity<SuccessMessageDTO> updateSong(@PathVariable("id") Long id, @RequestBody Song song) {
-        songService.updateSong(id, song);
+    @PutMapping(value = "/songs/{id}", consumes = MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<SuccessMessageDTO> updateSong(
+            @PathVariable("id") Long id, @ModelAttribute SaveUpdateSongDTO songDTO) throws IOException {
+        songService.updateSong(id, songDTO);
         return ResponseEntity.ok().body(new SuccessMessageDTO(SONG_WAS_UPDATED));
     }
 

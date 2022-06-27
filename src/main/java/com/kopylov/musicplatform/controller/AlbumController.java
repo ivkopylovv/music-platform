@@ -1,6 +1,6 @@
 package com.kopylov.musicplatform.controller;
 
-import com.kopylov.musicplatform.dto.request.SaveAlbumDTO;
+import com.kopylov.musicplatform.dto.request.SaveUpdateAlbumDTO;
 import com.kopylov.musicplatform.dto.response.AlbumDTO;
 import com.kopylov.musicplatform.dto.response.AlbumListDTO;
 import com.kopylov.musicplatform.dto.response.CountDTO;
@@ -47,7 +47,7 @@ public class AlbumController {
     }
 
     @PostMapping(value = "/albums", consumes = MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<SuccessMessageDTO> saveAlbum(@ModelAttribute SaveAlbumDTO dto) throws IOException {
+    ResponseEntity<SuccessMessageDTO> saveAlbum(@ModelAttribute SaveUpdateAlbumDTO dto) throws IOException {
         albumService.saveAlbum(dto);
         return ResponseEntity.ok().body(new SuccessMessageDTO(ALBUM_WAS_SAVED));
     }
@@ -58,9 +58,10 @@ public class AlbumController {
         return ResponseEntity.ok().body(new SuccessMessageDTO(ALBUM_WAS_DELETED));
     }
 
-    @PutMapping(value = "/albums/{id}")
-    ResponseEntity<SuccessMessageDTO> updateAlbum(@PathVariable("id") Long id, @RequestBody Album album) {
-        albumService.updateAlbum(id, album);
+    @PutMapping(value = "/albums/{id}", consumes = MULTIPART_FORM_DATA_VALUE)
+    ResponseEntity<SuccessMessageDTO> updateAlbum(
+            @PathVariable("id") Long id, @ModelAttribute SaveUpdateAlbumDTO dto) throws IOException {
+        albumService.updateAlbum(id, dto);
         return ResponseEntity.ok().body(new SuccessMessageDTO(ALBUM_WAS_UPDATED));
     }
 

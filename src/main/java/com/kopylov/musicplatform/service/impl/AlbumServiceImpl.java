@@ -1,17 +1,17 @@
 package com.kopylov.musicplatform.service.impl;
 
 import com.kopylov.musicplatform.dao.*;
-import com.kopylov.musicplatform.dto.request.SaveAlbumDTO;
+import com.kopylov.musicplatform.dto.request.SaveUpdateAlbumDTO;
 import com.kopylov.musicplatform.dto.response.AlbumDTO;
 import com.kopylov.musicplatform.entity.Album;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.exception.NotFoundException;
 import com.kopylov.musicplatform.helper.FileHelper;
+import com.kopylov.musicplatform.helper.SortHelper;
 import com.kopylov.musicplatform.mapper.request.RequestAlbumMapper;
 import com.kopylov.musicplatform.mapper.response.ResponseAlbumMapper;
 import com.kopylov.musicplatform.service.AlbumService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,11 +57,11 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     public List<Album> getSortedAlbums(boolean asc, String attribute) {
-        return albumDAO.findAll(asc ? Sort.by(attribute).ascending() : Sort.by(attribute).descending());
+        return albumDAO.findAll(SortHelper.getSortScript(asc, attribute));
     }
 
     @Override
-    public void saveAlbum(SaveAlbumDTO saveAlbumDTO) throws IOException {
+    public void saveAlbum(SaveUpdateAlbumDTO saveAlbumDTO) throws IOException {
         MultipartFile file = saveAlbumDTO.getImage();
         FileHelper.saveUploadedFile(file, STATIC_IMAGE_PATH);
         String imageName = DB_IMAGE_PATH + file.getOriginalFilename();
@@ -78,11 +78,17 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
-    public void updateAlbum(Long id, Album album) {
-        Album foundAlbum = albumDAO.findById(id)
-                .orElseThrow(() -> new NotFoundException(ALBUM_NOT_FOUND));
-        album.setId(foundAlbum.getId());
-        albumDAO.save(album);
+    public void updateAlbum(Long id, SaveUpdateAlbumDTO dto) throws IOException {
+        Album foundAlbum = getAlbum(id);
+        FileHelper.deleteFile(foundAlbum.getImageName());
+
+        MultipartFile file = dto.getImage();
+        String imageName = DB_IMAGE_PATH + file.getOriginalFilename();
+
+        Album updatedAlbum = RequestAlbumMapper.saveAlbumDTOToEntity(dto, imageName);
+        updatedAlbum.setId(id);
+
+        albumDAO.save(updatedAlbum);
     }
 
     @Override

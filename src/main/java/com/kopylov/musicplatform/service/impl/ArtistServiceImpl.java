@@ -7,11 +7,11 @@ import com.kopylov.musicplatform.entity.Artist;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.exception.NotFoundException;
 import com.kopylov.musicplatform.helper.FileHelper;
+import com.kopylov.musicplatform.helper.SortHelper;
 import com.kopylov.musicplatform.mapper.request.RequestArtistMapper;
 import com.kopylov.musicplatform.mapper.response.ResponseArtistMapper;
 import com.kopylov.musicplatform.service.ArtistService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -58,7 +58,7 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Override
     public List<Artist> getSortedArtists(boolean asc, String attribute) {
-        return artistDAO.findAll(asc ? Sort.by(attribute).ascending() : Sort.by(attribute).descending());
+        return artistDAO.findAll(SortHelper.getSortScript(asc, attribute));
     }
 
     @Override
@@ -72,6 +72,7 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public void updateArtist(Long id, SaveUpdateArtistDTO dto) throws IOException {
         Artist artist = getArtist(id);
+        FileHelper.deleteFile(artist.getImageName());
 
         MultipartFile file = dto.getImage();
         FileHelper.saveUploadedFile(file, STATIC_IMAGE_PATH);

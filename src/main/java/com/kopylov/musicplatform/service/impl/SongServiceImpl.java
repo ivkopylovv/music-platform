@@ -1,17 +1,17 @@
 package com.kopylov.musicplatform.service.impl;
 
 import com.kopylov.musicplatform.dao.*;
-import com.kopylov.musicplatform.dto.request.SaveSongDTO;
+import com.kopylov.musicplatform.dto.request.SaveUpdateSongDTO;
 import com.kopylov.musicplatform.entity.Album;
 import com.kopylov.musicplatform.entity.Artist;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.entity.SongAudio;
 import com.kopylov.musicplatform.exception.NotFoundException;
 import com.kopylov.musicplatform.helper.FileHelper;
+import com.kopylov.musicplatform.helper.SortHelper;
 import com.kopylov.musicplatform.mapper.request.RequestSongMapper;
 import com.kopylov.musicplatform.service.SongService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,11 +47,11 @@ public class SongServiceImpl implements SongService {
 
     @Override
     public List<Song> getSortedSongs(boolean asc, String attribute) {
-        return songDAO.findAll(asc ? Sort.by(attribute).ascending() : Sort.by(attribute).descending());
+        return songDAO.findAll(SortHelper.getSortScript(asc, attribute));
     }
 
     @Override
-    public void saveSong(SaveSongDTO songDTO) throws IOException {
+    public void saveSong(SaveUpdateSongDTO songDTO) throws IOException {
         List<Artist> artists = artistDAO.findAllById(songDTO.getArtistIds());
 
         if (artists.isEmpty()) {
@@ -78,11 +78,30 @@ public class SongServiceImpl implements SongService {
     }
 
     @Override
-    public void updateSong(Long id, Song song) {
-        Song foundSong = songDAO.findById(id)
-                .orElseThrow(() -> new NotFoundException(SONG_NOT_FOUND));
-        song.setId(foundSong.getId());
-        songDAO.save(song);
+    public void updateSong(Long id, SaveUpdateSongDTO songDTO) throws IOException {
+        SongAudio foundAudio = songAudioDAO.findBySongId(id)
+                .orElseThrow(() -> new NotFoundException(AUDIO_NOT_FOUND));
+
+        FileHelper.deleteFile(foundAudio.getAudioName());
+        MultipartFile audio = songDTO.getAudio();
+        FileHelper.saveUploadedFile(audio, STATIC_AUDIO_PATH);
+        String audioName = DB_AUDIO_PATH + audio.getOriginalFilename();
+        foundAudio.setAudioName(audioName);
+
+        songAudioDAO.save(foundAudio);
+
+        Album album = albumDAO.findById(songDTO.getAlbumId())
+                .orElseThrow(() -> new NotFoundException(ALBUM_NOT_FOUND));
+        List<Artist> artists = artistDAO.findAllById(songDTO.getArtistIds());
+
+        if (artists.isEmpty()) {
+            throw new NotFoundException(ARTISTS_NOT_FOUND);
+        }
+
+        Song updatedSong = RequestSongMapper.saveSongDTOToEntity(songDTO, album, artists);
+        updatedSong.setId(id);
+
+        songDAO.save(updatedSong);
     }
 
     @Override

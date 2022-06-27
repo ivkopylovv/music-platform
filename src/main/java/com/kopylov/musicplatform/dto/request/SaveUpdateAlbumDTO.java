@@ -16,7 +16,7 @@ import java.sql.Time;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaveAlbumDTO {
+public class SaveUpdateAlbumDTO {
     private String title;
     private AlbumType type;
     private AlbumGenre genre;

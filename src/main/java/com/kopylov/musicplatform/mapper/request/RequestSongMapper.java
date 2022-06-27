@@ -1,6 +1,6 @@
 package com.kopylov.musicplatform.mapper.request;
 
-import com.kopylov.musicplatform.dto.request.SaveSongDTO;
+import com.kopylov.musicplatform.dto.request.SaveUpdateSongDTO;
 import com.kopylov.musicplatform.entity.Album;
 import com.kopylov.musicplatform.entity.Artist;
 import com.kopylov.musicplatform.entity.Song;
@@ -11,7 +11,7 @@ import java.util.List;
 @UtilityClass
 public class RequestSongMapper {
 
-    public Song saveSongDTOToEntity(SaveSongDTO dto, Album album, List<Artist> artists) {
+    public Song saveSongDTOToEntity(SaveUpdateSongDTO dto, Album album, List<Artist> artists) {
         Song song = new Song();
         song.getArtists().addAll(artists);
 

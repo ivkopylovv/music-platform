@@ -12,10 +12,10 @@ import com.kopylov.musicplatform.entity.User;
 import com.kopylov.musicplatform.entity.compositekey.PlaylistId;
 import com.kopylov.musicplatform.exception.NotFoundException;
 import com.kopylov.musicplatform.helper.FileHelper;
+import com.kopylov.musicplatform.helper.SortHelper;
 import com.kopylov.musicplatform.mapper.response.ResponsePlaylistMapper;
 import com.kopylov.musicplatform.service.PlaylistService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -63,7 +63,7 @@ public class PlaylistServiceImpl implements PlaylistService {
     public List<PlaylistDTO> getSortedPlaylists(boolean asc, String attribute, String username) {
         List<Playlist> playlists = playlistDAO.findByIdUserUsername(
                 username,
-                asc ? Sort.by(attribute).ascending() : Sort.by(attribute).descending()
+                SortHelper.getSortScript(asc, attribute)
         );
 
         return ResponsePlaylistMapper.playlistsTOPlaylistDTOList(playlists);

@@ -10,10 +10,10 @@ import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.entity.User;
 import com.kopylov.musicplatform.entity.compositekey.LikedSongId;
 import com.kopylov.musicplatform.exception.NotFoundException;
+import com.kopylov.musicplatform.helper.SortHelper;
 import com.kopylov.musicplatform.mapper.response.ResponseLikedSongMapper;
 import com.kopylov.musicplatform.service.LikedSongService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +52,7 @@ public class LikedSongServiceImpl implements LikedSongService {
         List<LikedSong> likedSongs = likedSongDAO
                 .findByIdUserUsername(
                         username,
-                        asc ? Sort.by(attribute).ascending() : Sort.by(attribute).descending()
+                        SortHelper.getSortScript(asc, attribute)
                 );
 
         if (likedSongs.isEmpty()) {

@@ -11,11 +11,15 @@ import java.nio.file.Paths;
 @UtilityClass
 public class FileHelper {
 
-    public void saveUploadedFile(MultipartFile file, String static_path) throws IOException {
+    public void saveUploadedFile(MultipartFile file, String staticPath) throws IOException {
         if (!file.isEmpty()) {
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(static_path + file.getOriginalFilename());
+            Path path = Paths.get(staticPath + file.getOriginalFilename());
             Files.write(path, bytes);
         }
+    }
+
+    public void deleteFile(String staticPath) throws IOException {
+        Files.deleteIfExists(Path.of(staticPath));
     }
 }

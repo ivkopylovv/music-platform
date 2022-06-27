@@ -2,13 +2,13 @@ package com.kopylov.musicplatform.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kopylov.musicplatform.dao.AuthDAO;
+import com.kopylov.musicplatform.dao.RoleDAO;
 import com.kopylov.musicplatform.dao.TokenDAO;
 import com.kopylov.musicplatform.dto.request.UserCredsDTO;
 import com.kopylov.musicplatform.entity.Role;
 import com.kopylov.musicplatform.entity.User;
 import com.kopylov.musicplatform.enums.RoleName;
 import com.kopylov.musicplatform.exception.AlreadyExistsException;
-import com.kopylov.musicplatform.exception.NotFoundException;
 import com.kopylov.musicplatform.exception.UnauthorizedException;
 import com.kopylov.musicplatform.helper.DateHelper;
 import com.kopylov.musicplatform.helper.TokenHelper;
@@ -34,6 +34,7 @@ import java.util.Map;
 
 import static com.kopylov.musicplatform.constants.ErrorMessage.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Service
@@ -44,6 +45,7 @@ public class AuthServiceImpl implements UserDetailsService, AuthService {
     private final TokenDAO tokenDAO;
     private final TokenService tokenService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final RoleDAO roleDAO;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -73,7 +75,9 @@ public class AuthServiceImpl implements UserDetailsService, AuthService {
         User user = new User()
                 .setUsername(username)
                 .setPassword(passwordEncoder.encode(userCreds.getPassword()));
-        Role role = new Role(1L, RoleName.ROLE_USER);
+
+        Role role = roleDAO.findByName(RoleName.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException(INTERNAL_SERVER_ERROR.toString()));
         user.getRoles().add(role);
 
         authDAO.save(user);

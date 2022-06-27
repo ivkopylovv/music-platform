@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SaveSongDTO {
+public class SaveUpdateSongDTO {
     private String title;
     private Time duration;
     private Date releaseDate;
