@@ -22,18 +22,18 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping(value = "auth/reg")
-    ResponseEntity<SuccessMessageDTO> registerUser(@RequestBody UserCredsDTO userCreds) {
+    public ResponseEntity<SuccessMessageDTO> registerUser(@RequestBody UserCredsDTO userCreds) {
         authService.registerUser(userCreds);
         return ResponseEntity.ok().body(new SuccessMessageDTO(USER_HAS_BEEN_REGISTERED));
     }
 
     @GetMapping(value = "auth/token/refresh")
-    void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         authService.refreshToken(request, response);
     }
 
     @GetMapping(value = "auth/logout")
-    ResponseEntity<SuccessMessageDTO> logout(HttpServletRequest request) {
+    public ResponseEntity<SuccessMessageDTO> logout(HttpServletRequest request) {
         authService.logout(request.getHeader(AUTHORIZATION));
         return ResponseEntity.ok().body(new SuccessMessageDTO(USER_HAS_BEEN_LOGGED_OUT));
     }

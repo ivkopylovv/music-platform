@@ -1,5 +1,6 @@
 package com.kopylov.musicplatform.service;
 
+import com.kopylov.musicplatform.dto.request.RoleToUserDTO;
 import com.kopylov.musicplatform.dto.request.SaveUserDTO;
 import com.kopylov.musicplatform.dto.request.UpdateUserDTO;
 import com.kopylov.musicplatform.entity.User;
@@ -19,6 +20,8 @@ public interface UserService {
     void updateUserInfo(String username, UpdateUserDTO dto) throws IOException;
 
     void saveUser(SaveUserDTO dto) throws IOException;
+
+    void addRoleToUser(RoleToUserDTO dto);
 
     List<User> findUsersByFirstNameLastName(String firstName, String lastName);
 }

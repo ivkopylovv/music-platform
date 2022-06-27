@@ -6,7 +6,7 @@ import com.kopylov.musicplatform.entity.Album;
 import com.kopylov.musicplatform.entity.Artist;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.entity.SongAudio;
-import com.kopylov.musicplatform.exception.NotFoundException;
+import com.kopylov.musicplatform.exception.ResourceNotFoundException;
 import com.kopylov.musicplatform.helper.FileHelper;
 import com.kopylov.musicplatform.helper.SortHelper;
 import com.kopylov.musicplatform.mapper.request.RequestSongMapper;
@@ -37,7 +37,7 @@ public class SongServiceImpl implements SongService {
     @Override
     public Song getSong(Long id) {
         return songDAO.findById(id)
-                .orElseThrow(() -> new NotFoundException(SONG_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(SONG_NOT_FOUND));
     }
 
     @Override
@@ -55,11 +55,11 @@ public class SongServiceImpl implements SongService {
         List<Artist> artists = artistDAO.findAllById(songDTO.getArtistIds());
 
         if (artists.isEmpty()) {
-            throw new NotFoundException(ARTISTS_NOT_FOUND);
+            throw new ResourceNotFoundException(ARTISTS_NOT_FOUND);
         }
 
         Album album = albumDAO.findById(songDTO.getAlbumId())
-                .orElseThrow(() -> new NotFoundException(ALBUM_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ALBUM_NOT_FOUND));
 
         MultipartFile audio = songDTO.getAudio();
         FileHelper.saveUploadedFile(audio, STATIC_AUDIO_PATH);
@@ -80,9 +80,9 @@ public class SongServiceImpl implements SongService {
     @Override
     public void updateSong(Long id, SaveUpdateSongDTO songDTO) throws IOException {
         SongAudio foundAudio = songAudioDAO.findBySongId(id)
-                .orElseThrow(() -> new NotFoundException(AUDIO_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(AUDIO_NOT_FOUND));
 
-        FileHelper.deleteFile(foundAudio.getAudioName());
+        FileHelper.deleteFile(foundAudio.getAudioName(), STATIC_AUDIO_PATH);
         MultipartFile audio = songDTO.getAudio();
         FileHelper.saveUploadedFile(audio, STATIC_AUDIO_PATH);
         String audioName = DB_AUDIO_PATH + audio.getOriginalFilename();
@@ -91,11 +91,11 @@ public class SongServiceImpl implements SongService {
         songAudioDAO.save(foundAudio);
 
         Album album = albumDAO.findById(songDTO.getAlbumId())
-                .orElseThrow(() -> new NotFoundException(ALBUM_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ALBUM_NOT_FOUND));
         List<Artist> artists = artistDAO.findAllById(songDTO.getArtistIds());
 
         if (artists.isEmpty()) {
-            throw new NotFoundException(ARTISTS_NOT_FOUND);
+            throw new ResourceNotFoundException(ARTISTS_NOT_FOUND);
         }
 
         Song updatedSong = RequestSongMapper.saveSongDTOToEntity(songDTO, album, artists);
@@ -117,7 +117,7 @@ public class SongServiceImpl implements SongService {
     @Override
     public String getSongAudio(Long id) {
         SongAudio songAudio = songAudioDAO.findBySongId(id)
-                .orElseThrow(() -> new NotFoundException(AUDIO_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(AUDIO_NOT_FOUND));
         return songAudio.getAudioName();
     }
 }

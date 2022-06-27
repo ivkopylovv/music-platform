@@ -19,7 +19,8 @@ public class FileHelper {
         }
     }
 
-    public void deleteFile(String staticPath) throws IOException {
-        Files.deleteIfExists(Path.of(staticPath));
+    public void deleteFile(String staticPath, String commonPath) throws IOException {
+        String path = commonPath + staticPath.substring(1, 16);
+        Files.deleteIfExists(Path.of(path));
     }
 }

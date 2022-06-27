@@ -9,7 +9,7 @@ import com.kopylov.musicplatform.entity.LikedSong;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.entity.User;
 import com.kopylov.musicplatform.entity.compositekey.LikedSongId;
-import com.kopylov.musicplatform.exception.NotFoundException;
+import com.kopylov.musicplatform.exception.ResourceNotFoundException;
 import com.kopylov.musicplatform.helper.SortHelper;
 import com.kopylov.musicplatform.mapper.response.ResponseLikedSongMapper;
 import com.kopylov.musicplatform.service.LikedSongService;
@@ -32,7 +32,7 @@ public class LikedSongServiceImpl implements LikedSongService {
     @Override
     public LikedSongDTO getLikedSong(Long songId, String username) {
         LikedSong likedSong = likedSongDAO.findByIdSongIdAndIdUserUsername(songId, username)
-                .orElseThrow(() -> new NotFoundException(LIKED_SONG_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(LIKED_SONG_NOT_FOUND));
         return ResponseLikedSongMapper.likedSongToDTO(likedSong);
     }
 
@@ -41,7 +41,7 @@ public class LikedSongServiceImpl implements LikedSongService {
         List<LikedSong> likedSongs = likedSongDAO.findByIdUserUsername(username);
 
         if (likedSongs.isEmpty()) {
-            throw new NotFoundException(LIKED_SONG_NOT_FOUND);
+            throw new ResourceNotFoundException(LIKED_SONG_NOT_FOUND);
         }
 
         return ResponseLikedSongMapper.likedSongListToDTOList(likedSongs);
@@ -56,7 +56,7 @@ public class LikedSongServiceImpl implements LikedSongService {
                 );
 
         if (likedSongs.isEmpty()) {
-            throw new NotFoundException(LIKED_SONG_NOT_FOUND);
+            throw new ResourceNotFoundException(LIKED_SONG_NOT_FOUND);
         }
 
         return ResponseLikedSongMapper.likedSongListToDTOList(likedSongs);
@@ -65,9 +65,9 @@ public class LikedSongServiceImpl implements LikedSongService {
     @Override
     public void addSongToLiked(AddSongToLikedDTO dto) {
         Song song = songDAO.findById(dto.getSongId())
-                .orElseThrow(() -> new NotFoundException(SONG_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(SONG_NOT_FOUND));
         User user = authDAO.findUserByUsername(dto.getUsername())
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
 
         LikedSongId id = new LikedSongId(song, user);
         LikedSong likedSong = new LikedSong(id, dto.getAddedDate());
@@ -78,9 +78,9 @@ public class LikedSongServiceImpl implements LikedSongService {
     @Override
     public void deleteSongFromLiked(Long songId, String username) {
         Song song = songDAO.findById(songId)
-                .orElseThrow(() -> new NotFoundException(SONG_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(SONG_NOT_FOUND));
         User user = authDAO.findUserByUsername(username)
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
 
         LikedSongId id = new LikedSongId(song, user);
 

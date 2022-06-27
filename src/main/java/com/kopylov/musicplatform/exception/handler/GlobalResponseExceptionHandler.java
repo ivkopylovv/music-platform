@@ -1,7 +1,7 @@
 package com.kopylov.musicplatform.exception.handler;
 
 import com.kopylov.musicplatform.exception.AlreadyExistsException;
-import com.kopylov.musicplatform.exception.NotFoundException;
+import com.kopylov.musicplatform.exception.ResourceNotFoundException;
 import com.kopylov.musicplatform.exception.UnauthorizedException;
 import com.kopylov.musicplatform.exception.data.ApiError;
 import com.kopylov.musicplatform.helper.DateHelper;
@@ -132,9 +132,9 @@ public class GlobalResponseExceptionHandler extends ResponseEntityExceptionHandl
         return ResponseErrorMapper.errorToEntity(error);
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity handleResourceNotFoundException(
-            NotFoundException e, WebRequest request) {
+            ResourceNotFoundException e, WebRequest request) {
         ApiError error = new ApiError(
                 DateHelper.getCurrentDate(),
                 BAD_REQUEST.value(),

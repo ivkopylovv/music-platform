@@ -5,7 +5,7 @@ import com.kopylov.musicplatform.dto.request.SaveUpdateArtistDTO;
 import com.kopylov.musicplatform.dto.response.ArtistDTO;
 import com.kopylov.musicplatform.entity.Artist;
 import com.kopylov.musicplatform.entity.Song;
-import com.kopylov.musicplatform.exception.NotFoundException;
+import com.kopylov.musicplatform.exception.ResourceNotFoundException;
 import com.kopylov.musicplatform.helper.FileHelper;
 import com.kopylov.musicplatform.helper.SortHelper;
 import com.kopylov.musicplatform.mapper.request.RequestArtistMapper;
@@ -36,7 +36,7 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public Artist getArtist(Long id) {
         return artistDAO.findById(id)
-                .orElseThrow(() -> new NotFoundException(ARTIST_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(ARTIST_NOT_FOUND));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ArtistServiceImpl implements ArtistService {
         List<Song> songs = songDAO.findSongsByArtistsId(id);
 
         if (songs.isEmpty()) {
-            throw new NotFoundException(ARTIST_NOT_FOUND);
+            throw new ResourceNotFoundException(ARTIST_NOT_FOUND);
         }
 
         return ResponseArtistMapper.songListToArtistDTO(songs, artist);
@@ -72,7 +72,7 @@ public class ArtistServiceImpl implements ArtistService {
     @Override
     public void updateArtist(Long id, SaveUpdateArtistDTO dto) throws IOException {
         Artist artist = getArtist(id);
-        FileHelper.deleteFile(artist.getImageName());
+        FileHelper.deleteFile(artist.getImageName(), STATIC_IMAGE_PATH);
 
         MultipartFile file = dto.getImage();
         FileHelper.saveUploadedFile(file, STATIC_IMAGE_PATH);

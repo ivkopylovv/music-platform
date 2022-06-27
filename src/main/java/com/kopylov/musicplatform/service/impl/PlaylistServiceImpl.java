@@ -10,7 +10,7 @@ import com.kopylov.musicplatform.entity.Playlist;
 import com.kopylov.musicplatform.entity.Song;
 import com.kopylov.musicplatform.entity.User;
 import com.kopylov.musicplatform.entity.compositekey.PlaylistId;
-import com.kopylov.musicplatform.exception.NotFoundException;
+import com.kopylov.musicplatform.exception.ResourceNotFoundException;
 import com.kopylov.musicplatform.helper.FileHelper;
 import com.kopylov.musicplatform.helper.SortHelper;
 import com.kopylov.musicplatform.mapper.response.ResponsePlaylistMapper;
@@ -38,14 +38,14 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public PlaylistDTO getPlaylist(String username, String title) {
         Playlist playlist = playlistDAO.findByIdUserUsernameAndIdTitle(username, title)
-                .orElseThrow(() -> new NotFoundException(PLAYLIST_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(PLAYLIST_NOT_FOUND));
         return ResponsePlaylistMapper.entityToPlaylistDTO(playlist);
     }
 
     @Override
     public Playlist getDetailPlaylist(String username, String title) {
         return playlistDAO.findByIdUserUsernameAndIdTitle(username, title)
-                .orElseThrow(() -> new NotFoundException(PLAYLIST_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(PLAYLIST_NOT_FOUND));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         List<Playlist> playlists = playlistDAO.findByIdUserUsername(username);
 
         if (playlists.isEmpty()) {
-            throw new NotFoundException(PLAYLIST_NOT_FOUND);
+            throw new ResourceNotFoundException(PLAYLIST_NOT_FOUND);
         }
 
         return ResponsePlaylistMapper.playlistsTOPlaylistDTOList(playlists);
@@ -76,7 +76,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         String imageName = DB_IMAGE_PATH + file.getOriginalFilename();
 
         User user = authDAO.findUserByUsername(dto.getUsername())
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
         PlaylistId id = new PlaylistId(user, dto.getTitle());
         Playlist playlist = new Playlist(id, imageName, dto.getDescription(), null);
 
@@ -87,18 +87,18 @@ public class PlaylistServiceImpl implements PlaylistService {
     public void addSongToPlaylist(AddSongToPlaylist dto) {
         Playlist playlist = playlistDAO
                 .findByIdUserUsernameAndIdTitle(dto.getUsername(), dto.getTitle())
-                .orElseThrow(() -> new NotFoundException(PLAYLIST_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(PLAYLIST_NOT_FOUND));
         Song song = songDAO.findById(dto.getSongId())
-                .orElseThrow(() -> new NotFoundException(SONG_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(SONG_NOT_FOUND));
         playlist.getSongs().add(song);
     }
 
     @Override
     public void deleteSongFromPlaylist(String username, String title, Long songId) {
         Playlist playlist = playlistDAO.findByIdUserUsernameAndIdTitle(username, title)
-                .orElseThrow(() -> new NotFoundException(PLAYLIST_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(PLAYLIST_NOT_FOUND));
         Song song = songDAO.findById(songId)
-                .orElseThrow(() -> new NotFoundException(SONG_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(SONG_NOT_FOUND));
         playlist.getSongs().remove(song);
     }
 

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kopylov.musicplatform.exception.data.ApiError;
 import com.kopylov.musicplatform.helper.DateHelper;
 import com.kopylov.musicplatform.helper.TokenHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,13 +23,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static com.kopylov.musicplatform.constants.ErrorMessage.TOKEN_NOT_VALID;
-import static com.kopylov.musicplatform.constants.TokenOption.CLAIMS;
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@RequiredArgsConstructor
 public class AuthorizationFilter extends OncePerRequestFilter {
+    private final TokenHelper tokenHelper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -39,11 +41,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         } else {
             String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-            if (TokenHelper.isAuthorizationHeaderValid(authorizationHeader)) {
+            if (tokenHelper.isAuthorizationHeaderValid(authorizationHeader)) {
                 try {
                     DecodedJWT decodedJWT = getDecodedJWT(authorizationHeader);
                     String username = decodedJWT.getSubject();
-                    String[] roles = decodedJWT.getClaim(CLAIMS).asArray(String.class);
+                    String[] roles = decodedJWT.getClaim(tokenHelper.getCLAIMS()).asArray(String.class);
 
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     stream(roles).forEach(role -> {
@@ -74,8 +76,8 @@ public class AuthorizationFilter extends OncePerRequestFilter {
     }
 
     private DecodedJWT getDecodedJWT(String authorizationHeader) {
-        String token = TokenHelper.getTokenByAuthorizationHeader(authorizationHeader);
-        Algorithm algorithm = TokenHelper.getToken();
+        String token = tokenHelper.getTokenByAuthorizationHeader(authorizationHeader);
+        Algorithm algorithm = tokenHelper.getToken();
         JWTVerifier verifier = JWT.require(algorithm).build();
 
         return verifier.verify(token);

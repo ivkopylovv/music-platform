@@ -24,55 +24,55 @@ public class SongController {
     private final SongService songService;
 
     @GetMapping(value = "/songs/{id}")
-    ResponseEntity<Song> getSongById(@PathVariable("id") Long id) {
+    public ResponseEntity<Song> getSongById(@PathVariable("id") Long id) {
         return ResponseEntity.ok().body(songService.getSong(id));
     }
 
     @GetMapping(value = "/songs")
-    ResponseEntity<SongListDTO> getSongs() {
+    public ResponseEntity<SongListDTO> getSongs() {
         List<Song> songs = songService.getSongs();
         return ResponseEntity.ok().body(new SongListDTO(songs));
     }
 
     @GetMapping(value = "/songs", params = {"asc", "attribute"})
-    ResponseEntity<SongListDTO> getSortedSongs(
+    public ResponseEntity<SongListDTO> getSortedSongs(
             @RequestParam("asc") boolean asc, @RequestParam("attribute") String attribute) {
         List<Song> songs = songService.getSortedSongs(asc, attribute);
         return ResponseEntity.ok().body(new SongListDTO(songs));
     }
 
     @PostMapping(value = "/songs", consumes = MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<SuccessMessageDTO> saveSong(@ModelAttribute SaveUpdateSongDTO songDTO) throws IOException {
+    public ResponseEntity<SuccessMessageDTO> saveSong(@ModelAttribute SaveUpdateSongDTO songDTO) throws IOException {
         songService.saveSong(songDTO);
         return ResponseEntity.ok().body(new SuccessMessageDTO(SONG_WAS_SAVED));
     }
 
     @DeleteMapping(value = "/songs/{id}")
-    ResponseEntity<SuccessMessageDTO> deleteSong(@PathVariable("id") Long id) {
+    public ResponseEntity<SuccessMessageDTO> deleteSong(@PathVariable("id") Long id) {
         songService.deleteSong(id);
         return ResponseEntity.ok().body(new SuccessMessageDTO(SONG_WAS_DELETED));
     }
 
     @PutMapping(value = "/songs/{id}", consumes = MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<SuccessMessageDTO> updateSong(
+    public ResponseEntity<SuccessMessageDTO> updateSong(
             @PathVariable("id") Long id, @ModelAttribute SaveUpdateSongDTO songDTO) throws IOException {
         songService.updateSong(id, songDTO);
         return ResponseEntity.ok().body(new SuccessMessageDTO(SONG_WAS_UPDATED));
     }
 
     @GetMapping(value = "/songs/count")
-    ResponseEntity<CountDTO> getSongsCount() {
+    public ResponseEntity<CountDTO> getSongsCount() {
         return ResponseEntity.ok().body(new CountDTO(songService.getSongsCount()));
     }
 
     @GetMapping(value = "songs/find/{title}")
-    ResponseEntity<SongListDTO> findSongsByTitle(@PathVariable String title) {
+    public ResponseEntity<SongListDTO> findSongsByTitle(@PathVariable String title) {
         List<Song> songs = songService.findSongsByTitle(title);
         return ResponseEntity.ok().body(new SongListDTO(songs));
     }
 
     @GetMapping(value = "/songs/audio/{id}")
-    ResponseEntity<SongAudioDTO> getSongAudio(@PathVariable Long id) {
+    public ResponseEntity<SongAudioDTO> getSongAudio(@PathVariable Long id) {
         String audioName = songService.getSongAudio(id);
         return ResponseEntity.ok().body(new SongAudioDTO(audioName));
     }

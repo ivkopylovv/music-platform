@@ -29,6 +29,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
+    private final TokenHelper tokenHelper;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -43,8 +44,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
         User user = (User) authentication.getPrincipal();
-        String access_token = TokenHelper.getAccessToken(user, request);
-        String refresh_token = TokenHelper.getRefreshToken(user, request);
+        String access_token = tokenHelper.getAccessToken(user, request);
+        String refresh_token = tokenHelper.getRefreshToken(user, request);
 
         tokenService.saveToken(user.getUsername(), refresh_token);
         Map<String, String> tokens = ResponseTokensMapper.getTokensMap(access_token, refresh_token);

@@ -3,12 +3,13 @@ package com.kopylov.musicplatform.service.impl;
 import com.kopylov.musicplatform.dao.RoleDAO;
 import com.kopylov.musicplatform.dao.TokenDAO;
 import com.kopylov.musicplatform.dao.UserDAO;
+import com.kopylov.musicplatform.dto.request.RoleToUserDTO;
 import com.kopylov.musicplatform.dto.request.SaveUserDTO;
 import com.kopylov.musicplatform.dto.request.UpdateUserDTO;
 import com.kopylov.musicplatform.entity.Role;
 import com.kopylov.musicplatform.entity.User;
 import com.kopylov.musicplatform.enums.RoleName;
-import com.kopylov.musicplatform.exception.NotFoundException;
+import com.kopylov.musicplatform.exception.ResourceNotFoundException;
 import com.kopylov.musicplatform.helper.FileHelper;
 import com.kopylov.musicplatform.helper.SortHelper;
 import com.kopylov.musicplatform.mapper.response.ResponseUserMapper;
@@ -32,15 +33,15 @@ import static com.kopylov.musicplatform.constants.FilePath.STATIC_IMAGE_PATH;
 @Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private UserDAO userDAO;
-    private TokenDAO tokenDAO;
-    private BCryptPasswordEncoder passwordEncoder;
-    private RoleDAO roleDAO;
+    private final UserDAO userDAO;
+    private final TokenDAO tokenDAO;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final RoleDAO roleDAO;
 
     @Override
     public User getUser(String username) {
         return userDAO.findUserByUsername(username)
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
     }
 
     @Override
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
     public void updateUserInfo(String username, UpdateUserDTO dto) throws IOException {
         User user = getUser(username);
 
-        FileHelper.deleteFile(user.getImageName());
+        FileHelper.deleteFile(user.getImageName(), STATIC_IMAGE_PATH);
         MultipartFile file = dto.getImage();
         FileHelper.saveUploadedFile(file, STATIC_IMAGE_PATH);
         String imageName = DB_IMAGE_PATH + file.getOriginalFilename();
@@ -87,11 +88,20 @@ public class UserServiceImpl implements UserService {
         dto.setPassword(passwordEncoder.encode(password));
         List<Role> roles = dto.getRoles().stream()
                 .map(role -> roleDAO.findByName(RoleName.valueOf(role))
-                        .orElseThrow(() -> new NotFoundException(ROLE_NOT_FOUND)))
+                        .orElseThrow(() -> new ResourceNotFoundException(ROLE_NOT_FOUND)))
                 .collect(Collectors.toList());
         User user = ResponseUserMapper.saveDTOToEntity(dto, roles, imageName);
 
         userDAO.save(user);
+    }
+
+    @Override
+    public void addRoleToUser(RoleToUserDTO dto) {
+        Role role = roleDAO.findByName(RoleName.valueOf(dto.getRoleName()))
+                .orElseThrow(() -> new ResourceNotFoundException(ROLE_NOT_FOUND));
+        User user = userDAO.findUserByUsername(dto.getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
+        user.getRoles().add(role);
     }
 
     @Override

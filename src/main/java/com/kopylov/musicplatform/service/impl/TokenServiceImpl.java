@@ -6,6 +6,7 @@ import com.kopylov.musicplatform.entity.Token;
 import com.kopylov.musicplatform.entity.User;
 import com.kopylov.musicplatform.exception.UnauthorizedException;
 import com.kopylov.musicplatform.helper.DateHelper;
+import com.kopylov.musicplatform.helper.TokenHelper;
 import com.kopylov.musicplatform.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import static com.kopylov.musicplatform.constants.ErrorMessage.USER_IS_UNAUTHORI
 public class TokenServiceImpl implements TokenService {
     private final TokenDAO tokenDAO;
     private final AuthDAO authDAO;
+    private final TokenHelper tokenHelper;
 
     @Override
     public void saveToken(String username, String newRefreshToken) {
@@ -39,7 +41,8 @@ public class TokenServiceImpl implements TokenService {
         Token newToken = new Token()
                 .setToken(newRefreshToken)
                 .setUser(user)
-                .setExpirationDate(DateHelper.getRefreshTokenTimeAlive());
+                .setExpirationDate(DateHelper
+                        .getTokenTimeAlive(tokenHelper.getACCESS_TOKEN_TIME_ALIVE()));
 
         tokenDAO.save(newToken);
     }

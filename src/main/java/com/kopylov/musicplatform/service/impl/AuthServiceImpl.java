@@ -46,6 +46,7 @@ public class AuthServiceImpl implements UserDetailsService, AuthService {
     private final TokenService tokenService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final RoleDAO roleDAO;
+    private final TokenHelper tokenHelper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -87,7 +88,7 @@ public class AuthServiceImpl implements UserDetailsService, AuthService {
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
 
-        if (TokenHelper.isAuthorizationHeaderValid(authorizationHeader)) {
+        if (tokenHelper.isAuthorizationHeaderValid(authorizationHeader)) {
             successfulRefresh(request, response, authorizationHeader);
         } else {
             throw new UnauthorizedException(USER_IS_UNAUTHORIZED);
@@ -96,14 +97,14 @@ public class AuthServiceImpl implements UserDetailsService, AuthService {
 
     @Override
     public void logout(String authorizationHeader) {
-        String token = TokenHelper.getTokenByAuthorizationHeader(authorizationHeader);
-        String username = TokenHelper.getUsernameByToken(token);
+        String token = tokenHelper.getTokenByAuthorizationHeader(authorizationHeader);
+        String username = tokenHelper.getUsernameByToken(token);
         tokenDAO.deleteByUserUsername(username);
     }
 
     private void successfulRefresh(HttpServletRequest request, HttpServletResponse response, String authorizationHeader) throws IOException {
-        String refresh_token = TokenHelper.getTokenByAuthorizationHeader(authorizationHeader);
-        String username = TokenHelper.getUsernameByToken(refresh_token);
+        String refresh_token = tokenHelper.getTokenByAuthorizationHeader(authorizationHeader);
+        String username = tokenHelper.getUsernameByToken(refresh_token);
 
         User user = authDAO.findUserByUsername(username)
                 .orElseThrow(() -> new UnauthorizedException(USER_IS_UNAUTHORIZED));
@@ -115,8 +116,8 @@ public class AuthServiceImpl implements UserDetailsService, AuthService {
             throw new UnauthorizedException(USER_IS_UNAUTHORIZED);
         }
 
-        String access_token = TokenHelper.getAccessToken(user, request);
-        String new_refresh_token = TokenHelper.getRefreshToken(user, request);
+        String access_token = tokenHelper.getAccessToken(user, request);
+        String new_refresh_token = tokenHelper.getRefreshToken(user, request);
         tokenService.saveToken(username, new_refresh_token);
 
         Map<String, String> tokens = ResponseTokensMapper.getTokensMap(access_token, new_refresh_token);

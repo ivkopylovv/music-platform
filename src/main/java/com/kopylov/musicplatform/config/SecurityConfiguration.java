@@ -2,6 +2,7 @@ package com.kopylov.musicplatform.config;
 
 import com.kopylov.musicplatform.filter.AuthenticationFilter;
 import com.kopylov.musicplatform.filter.AuthorizationFilter;
+import com.kopylov.musicplatform.helper.TokenHelper;
 import com.kopylov.musicplatform.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserDetailsService userDetailsService;
     private final TokenService tokenService;
+    private final TokenHelper tokenHelper;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -34,7 +36,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManagerBean(), tokenService);
+        AuthenticationFilter authenticationFilter =
+                new AuthenticationFilter(authenticationManagerBean(), tokenService, tokenHelper);
         authenticationFilter.setFilterProcessesUrl("/api/v1/auth/login");
 
         http
@@ -45,13 +48,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN, REGISTRATION, TOKEN_REFRESH).permitAll()
-                .antMatchers(POST, SONGS, ALBUMS, ARTISTS).hasAnyAuthority("ROLE_ADMIN")
-                .antMatchers(DELETE, SONGS, ALBUMS, ARTISTS).hasAnyAuthority("ROLE_ADMIN")
-                .antMatchers(PUT, SONGS, ALBUMS, ARTISTS).hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers(POST, SONGS, ALBUMS, ARTISTS, USERS).hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers(DELETE, SONGS, ALBUMS, ARTISTS, USERS).hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers(PUT, SONGS, ALBUMS, ARTISTS, USERS).hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers(GET, USERS).hasAnyAuthority("ROLE_ADMIN")
                 .antMatchers("/**").hasAnyAuthority("ROLE_USER")
                 .and()
                 .addFilter(authenticationFilter)
-                .addFilterBefore(new AuthorizationFilter(),
+                .addFilterBefore(new AuthorizationFilter(tokenHelper),
                         UsernamePasswordAuthenticationFilter.class);
     }
 

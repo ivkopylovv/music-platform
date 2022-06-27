@@ -5,18 +5,26 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.kopylov.musicplatform.entity.Role;
-import lombok.experimental.UtilityClass;
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 
-import static com.kopylov.musicplatform.constants.TokenOption.CLAIMS;
-
-@UtilityClass
+@Component
+@Getter
 public class TokenHelper {
-    private final String SECRET_KEY = "secret";
+    @Value("${token.claims}")
+    private String CLAIMS;
+    @Value("${token.secret.key}")
+    private String SECRET_KEY;
+    @Value("${token.access.time.alive}")
+    private Long ACCESS_TOKEN_TIME_ALIVE;
+    @Value("${token.refresh.time.alive}")
+    private Long REFRESH_TOKEN_TIME_ALIVE;
 
     public Algorithm getToken() {
         return Algorithm.HMAC256((SECRET_KEY).getBytes());
@@ -26,7 +34,7 @@ public class TokenHelper {
 
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(DateHelper.getAccessTokenTimeAlive())
+                .withExpiresAt(DateHelper.getTokenTimeAlive(ACCESS_TOKEN_TIME_ALIVE))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim(CLAIMS, user.getAuthorities()
                         .stream()
@@ -39,7 +47,7 @@ public class TokenHelper {
 
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(DateHelper.getAccessTokenTimeAlive())
+                .withExpiresAt(DateHelper.getTokenTimeAlive(REFRESH_TOKEN_TIME_ALIVE))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim(CLAIMS, user.getRoles()
                         .stream()
@@ -53,7 +61,7 @@ public class TokenHelper {
 
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(DateHelper.getRefreshTokenTimeAlive())
+                .withExpiresAt(DateHelper.getTokenTimeAlive(REFRESH_TOKEN_TIME_ALIVE))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(getToken());
     }
@@ -62,7 +70,7 @@ public class TokenHelper {
 
         return JWT.create()
                 .withSubject(user.getUsername())
-                .withExpiresAt(DateHelper.getRefreshTokenTimeAlive())
+                .withExpiresAt(DateHelper.getTokenTimeAlive(ACCESS_TOKEN_TIME_ALIVE))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(getToken());
     }

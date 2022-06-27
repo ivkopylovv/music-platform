@@ -26,25 +26,25 @@ public class PlaylistController {
     private final PlaylistService playlistService;
 
     @GetMapping(value = "/playlists", params = {"username", "title"})
-    ResponseEntity<PlaylistDTO> getPlaylist(
+    public ResponseEntity<PlaylistDTO> getPlaylist(
             @RequestParam("username") String username, @RequestParam("title") String title) {
         return ResponseEntity.ok().body(playlistService.getPlaylist(username, title));
     }
 
     @GetMapping(value = "/playlists/detail", params = {"username", "title"})
-    ResponseEntity<Playlist> getDetailedPlaylist(
+    public ResponseEntity<Playlist> getDetailedPlaylist(
             @RequestParam("username") String username, @RequestParam("title") String title) {
         return ResponseEntity.ok().body(playlistService.getDetailPlaylist(username, title));
     }
 
     @GetMapping(value = "/playlists/{username}")
-    ResponseEntity<PlaylistListDTO> getPlaylists(@PathVariable String username) {
+    public ResponseEntity<PlaylistListDTO> getPlaylists(@PathVariable String username) {
         List<PlaylistDTO> playlists = playlistService.getPlaylists(username);
         return ResponseEntity.ok().body(new PlaylistListDTO(playlists));
     }
 
     @GetMapping(value = "/playlists/", params = {"username", "asc", "attribute"})
-    ResponseEntity<PlaylistListDTO> getPlaylists(
+    public ResponseEntity<PlaylistListDTO> getPlaylists(
             @RequestParam("username") String username,
             @RequestParam("asc") boolean asc,
             @RequestParam("attribute") String attribute) {
@@ -53,19 +53,19 @@ public class PlaylistController {
     }
 
     @PostMapping(value = "/playlists", consumes = MULTIPART_FORM_DATA_VALUE)
-    ResponseEntity<SuccessMessageDTO> createPlaylist(@ModelAttribute CreatePlaylistDTO dto) throws IOException {
+    public ResponseEntity<SuccessMessageDTO> createPlaylist(@ModelAttribute CreatePlaylistDTO dto) throws IOException {
         playlistService.createPlaylist(dto);
         return ResponseEntity.ok().body(new SuccessMessageDTO(PLAYLIST_WAS_CREATED));
     }
 
     @PostMapping(value = "/playlists")
-    ResponseEntity<SuccessMessageDTO> addSongToPlaylist(@RequestBody AddSongToPlaylist dto) {
+    public ResponseEntity<SuccessMessageDTO> addSongToPlaylist(@RequestBody AddSongToPlaylist dto) {
         playlistService.addSongToPlaylist(dto);
         return ResponseEntity.ok().body(new SuccessMessageDTO(SONG_WAS_ADDED));
     }
 
     @DeleteMapping(value = "/playlists", params = {"id", "username", "title"})
-    ResponseEntity<SuccessMessageDTO> deleteSongFromPlaylist(
+    public ResponseEntity<SuccessMessageDTO> deleteSongFromPlaylist(
             @RequestParam("id") Long id,
             @RequestParam("username") String username,
             @RequestParam("title") String title) {
@@ -74,7 +74,7 @@ public class PlaylistController {
     }
 
     @GetMapping(value = "/playlists/find", params = {"username", "title", "song-title", "album-title", "artist-name"})
-    ResponseEntity<SongListDTO> findPlaylistSongs(
+    public ResponseEntity<SongListDTO> findPlaylistSongs(
             @RequestParam("username") String username,
             @RequestParam("title") String title,
             @RequestParam("song-title") String songTitle,

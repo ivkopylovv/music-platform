@@ -31,4 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/application.properties
+/src/main/resources/application.yml
+/src/main/resources/META-INF/additional-spring-configuration-metadata.json
