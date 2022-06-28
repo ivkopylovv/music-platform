@@ -23,4 +23,6 @@ public class Artist {
     @NonNull
     private String name;
     private String imageName;
+
+
 }
